@@ -4,7 +4,7 @@ var config = {
     httpPort: process.env.PORT || 7777,
     env: process.env.NODE_ENV || 'dev',
     apiToken: process.env.API_TOKEN || 'local123',
-    mongoDB: process.env.NEO4J_URL || 'mongodb://localhost:27017/j316notificator',
+    neo4j: process.env.NEO4J_URL || 'http://app44006523:vpaX6Pf9rPtagEIpSbt2@app44006523.sb04.stations.graphenedb.com:24789',
     init: function () {
         return this;
     }

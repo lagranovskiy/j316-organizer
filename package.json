@@ -12,12 +12,16 @@
     "cookie-parser": "^1.4.0",
     "ejs": "2.3.3",
     "express": "4.13.3",
+    "html": "0.0.10",
     "method-override": "^2.3.5",
     "moment": "^2.10.6",
     "morgan": "^1.6.1",
     "neo-async": "^1.5.0",
     "neo4j": "^1.1.1",
-    "underscore": "^1.8.3"
+    "node-uuid": "^1.4.7",
+    "object-extend": "^0.5.0",
+    "underscore": "^1.8.3",
+    "util": "^0.10.3"
   },
   "repository": {
     "type": "git",

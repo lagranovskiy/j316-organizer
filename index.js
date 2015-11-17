@@ -17,14 +17,9 @@ app.use(methodOverride()); // simulate DELETE and PUT
 app.use(cookieParser('')); // read cookies (needed for auth)
 
 
-require('./api')(app);
+require('./app/routes.js')(app);
 
 app.use(express.static(__dirname + '/public'));
-
-app.get('/', function (request, response) {
-    response.render('index.html');
-});
-
 
 app.listen(config.httpPort, function () {
     console.log('Node app is running on port', config.httpPort);
