@@ -1,0 +1,32 @@
+{
+  "name": "j316-oraganizer",
+  "version": "1.0.0",
+  "description": "Oraganizer for person relation and functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "cookie-parser": "^1.4.0",
+    "ejs": "2.3.3",
+    "express": "4.13.3",
+    "method-override": "^2.3.5",
+    "moment": "^2.10.6",
+    "morgan": "^1.6.1",
+    "neo-async": "^1.5.0",
+    "neo4j": "^1.1.1",
+    "underscore": "^1.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lagranovskiy/j316-organizer.git"
+  },
+  "author": "Leonid Agranovskiy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lagranovskiy/j316-organizer/issues"
+  },
+  "homepage": "https://github.com/lagranovskiy/j316-organizer#readme"
+}
