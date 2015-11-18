@@ -26,8 +26,10 @@ module.exports = function (app) {
 
     app.get('/person', personController.listPersons);
     app.get('/person/:uuid', personController.findPerson);
-    app.post('/person', personController.createPerson);
 
+    app.post('/person', personController.createPerson);
+    app.put('/person', personController.updatePerson);
+    app.delete('/person/:uuid', personController.deletePerson);
 
     /**
      * Test if the caller gave the apiToken in the apiToken query param.

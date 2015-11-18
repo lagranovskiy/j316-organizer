@@ -15,7 +15,7 @@ function PersonRepository() {
  * @param retValCallback
  * @returns {*}
  */
-PersonRepository.prototype.createPerson = function(person, retValCallback){
+PersonRepository.prototype.createPerson = function (person, retValCallback) {
     if (!person) {
         return callback('Cannot create person. Invalid args.');
     }
@@ -30,10 +30,10 @@ PersonRepository.prototype.createPerson = function(person, retValCallback){
     };
 
     async.waterfall([
-        function(callback) {
+        function (callback) {
             db.query(query, params, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             if (results.length !== 1) {
                 return retValCallback('Cannot create person with given properties.');
             }
@@ -49,7 +49,7 @@ PersonRepository.prototype.createPerson = function(person, retValCallback){
  * @param retValCallback
  * @returns {*}
  */
-PersonRepository.prototype.findPerson = function(uuid, retValCallback){
+PersonRepository.prototype.findPerson = function (uuid, retValCallback) {
     if (!uuid) {
         return callback('Cannot create person. Invalid args.');
     }
@@ -65,10 +65,10 @@ PersonRepository.prototype.findPerson = function(uuid, retValCallback){
     };
 
     async.waterfall([
-        function(callback) {
+        function (callback) {
             db.query(query, params, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
             if (results.length !== 1) {
                 return retValCallback('Cannot find person with given properties.');
             }
@@ -86,7 +86,7 @@ PersonRepository.prototype.findPerson = function(uuid, retValCallback){
  * @param retValCallback
  * @returns {*}
  */
-PersonRepository.prototype.findPersons = function(retValCallback){
+PersonRepository.prototype.findPersons = function (retValCallback) {
 
     var query = [
         "MATCH (person:Person)",
@@ -95,10 +95,10 @@ PersonRepository.prototype.findPersons = function(retValCallback){
 
 
     async.waterfall([
-        function(callback) {
+        function (callback) {
             db.query(query, null, callback);
         },
-        function(results, callback) {
+        function (results, callback) {
 
             var retVal = [];
             _.each(results, function (person) {
@@ -115,19 +115,73 @@ PersonRepository.prototype.findPersons = function(retValCallback){
  * @param user
  * @param callback
  */
-PersonRepository.prototype.updatePerson = function (person, callback) {
-    if (!person) {
+PersonRepository.prototype.updatePerson = function (person, retValCallback) {
+    if (!person || !person.uuid) {
         return callback('Cannot update person. Invalid args.');
     }
 
+    var query = [
+        "MATCH (person:Person{ uuid:{uuid}})",
+        "SET person = {personData}",
+        "RETURN person"
+    ].join('\n');
+
+    var params = {
+        uuid: person.uuid,
+        personData: person
+    };
+
+
     async.waterfall([function (callback) {
-        db.getNodeById(person.id, callback);
-    }, function (personNode, callback) {
-        _.extend(personNode.data, person.data);
-        personNode.save(callback);
-    }, function (updatedPerson, callback) {
-        callback(null, new Person(updatedPerson.id, updatedPerson.data));
-    }], callback);
+        db.query(query, params, callback);
+    }, function (updatedPersonList, callback) {
+        if (!updatedPersonList || updatedPersonList.length == 0) {
+            return callback('Cannot update person. Person with given uuid not found.');
+        }
+
+        return callback(null, updatedPersonList[0].person.data);
+    }], retValCallback);
+};
+
+
+/**
+ * Updates person to the given state
+ * @param user
+ * @param callback
+ */
+PersonRepository.prototype.deletePerson = function (uuid, retValCallback) {
+    if (!uuid) {
+        return callback('Cannot update person. Invalid args.');
+    }
+
+    var query = [
+        "MATCH (person:Person{ uuid:{uuid}})",
+        "RETURN person"
+    ].join('\n');
+
+    var params = {
+        uuid: uuid
+    };
+
+    async.waterfall([function (callback) {
+        db.query(query, params, callback);
+    }, function (persons, callback) {
+
+        if (!persons || persons.length != 1) {
+            return callback('Not found');
+        }
+
+        db.getNodeById(persons[0].person.id, callback);
+    }, function (node, callback) {
+        node.delete(callback);
+    }], function (err, data) {
+        if (err) {
+            return retValCallback('Cannot delete person:' + err);
+        }
+
+        return retValCallback(null, true);
+
+    });
 };
 
 
@@ -158,7 +212,6 @@ PersonRepository.prototype.listPersons = function (retValCallback) {
         }
     ], retValCallback);
 };
-
 
 
 module.exports = PersonRepository;

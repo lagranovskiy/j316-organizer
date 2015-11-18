@@ -2,10 +2,29 @@ var util = require('util'),
     Entity = require('./Entity'),
     extend = require('object-extend');
 
+function validatePerson(person, callback) {
+    var retVal = [];
+    if (!person.forename) {
+        retVal.push('Person must have a forename');
+    }
+    if (!person.surname) {
+        retVal.push('Person must have a surname');
+    }
+
+    if (!person.gender) {
+        retVal.push('Person must have a gender');
+    }
+    if (retVal.length > 0) {
+        callback(retVal);
+    } else {
+        callback(null, person);
+    }
+}
+
 /**
  * Person data entity
  **/
-var Person = function(personData) {
+var Person = function (personData) {
     var data = {};
 
     if (personData) {
@@ -27,6 +46,14 @@ var Person = function(personData) {
          */
         get surname() {
             return data.surname;
+        },
+
+        /**
+         * Returns the family state of the person
+         * @returns {*}
+         */
+        get familyState() {
+            return data.familyState;
         },
 
 
@@ -103,7 +130,26 @@ var Person = function(personData) {
          */
         get wasActiveMemberTill() {
             return data.wasActiveMemberTill;
+        },
+
+
+        /**
+         * Returns the comment to the person
+         * @returns {*}
+         */
+        get comment() {
+            return data.comment;
+        },
+
+        /**
+         * Validates current person and returns array of failures or the object
+         * @param callback
+         */
+        validate: function(callback){
+            validatePerson(this, callback);
         }
+
+
 
 
     });

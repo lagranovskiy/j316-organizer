@@ -80,8 +80,20 @@ var PersonController = function () {
          * @param res
          * @param next
          */
-        savePerson: function (req, res, next) {
+        updatePerson: function (req, res, next) {
 
+            var personData = req.body;
+
+            if (!personData) {
+                return next('Error. Input is empty');
+            }
+
+            PersonService.updatePerson(personData, function (err, result) {
+                if (err) {
+                    return next(err);
+                }
+                return res.send(result);
+            });
 
         },
 
@@ -93,6 +105,19 @@ var PersonController = function () {
          */
         deletePerson: function (req, res, next) {
 
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+
+            PersonService.deletePerson(personUUID, function (err, result) {
+                if (err) {
+                    return next(err);
+                }
+
+                return res.send(result);
+            });
 
         }
 
