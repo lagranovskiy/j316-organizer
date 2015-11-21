@@ -10,38 +10,42 @@ function PersonRepository() {
 
 
 /**
- * Creates a new person
- * @param person
+ * returns a list of all persons
+ *
+ * @param person uuid
  * @param retValCallback
  * @returns {*}
  */
-PersonRepository.prototype.createPerson = function (person, retValCallback) {
-    if (!person) {
-        return callback('Cannot create person. Invalid args.');
-    }
+PersonRepository.prototype.findPersons = function (retValCallback) {
 
     var query = [
-        "CREATE (person:Person{projectData})",
+        "MATCH (person:Person)",
         "RETURN person"
     ].join('\n');
 
-    var params = {
-        projectData: person
-    };
 
     async.waterfall([
         function (callback) {
-            db.query(query, params, callback);
+            db.query(query, null, function (err, result) {
+                if (err) {
+                    // return callback(err);
+                }
+
+                return callback(null, result);
+            });
         },
         function (results, callback) {
-            if (results.length !== 1) {
-                return retValCallback('Cannot create person with given properties.');
-            }
 
-            return callback(null, results[0].person.data);
+            var retVal = [];
+            _.each(results, function (person) {
+                retVal.push(person.person.data);
+            });
+
+            return callback(null, retVal);
         }
     ], retValCallback);
 };
+
 
 /**
  * finds a person by uuid
@@ -49,6 +53,7 @@ PersonRepository.prototype.createPerson = function (person, retValCallback) {
  * @param retValCallback
  * @returns {*}
  */
+
 PersonRepository.prototype.findPerson = function (uuid, retValCallback) {
     if (!uuid) {
         return callback('Cannot create person. Invalid args.');
@@ -80,32 +85,37 @@ PersonRepository.prototype.findPerson = function (uuid, retValCallback) {
 
 
 /**
- * returns a list of all persons
- *
- * @param person uuid
+ * Creates a new person
+ * @param person
  * @param retValCallback
  * @returns {*}
  */
-PersonRepository.prototype.findPersons = function (retValCallback) {
+PersonRepository.prototype.createPerson = function (person, retValCallback) {
+    if (!person) {
+        return callback('Cannot create person. Invalid args.');
+    }
+
+    person = _.omit(person, 'extra');
 
     var query = [
-        "MATCH (person:Person)",
+        "CREATE (person:Person{projectData})",
         "RETURN person"
     ].join('\n');
 
+    var params = {
+        projectData: person
+    };
 
     async.waterfall([
         function (callback) {
-            db.query(query, null, callback);
+            db.query(query, params, callback);
         },
         function (results, callback) {
+            if (results.length !== 1) {
+                return retValCallback('Cannot create person with given properties.');
+            }
 
-            var retVal = [];
-            _.each(results, function (person) {
-                retVal.push(person.person.data);
-            });
-
-            return callback(null, retVal);
+            return callback(null, results[0].person.data);
         }
     ], retValCallback);
 };
@@ -119,6 +129,8 @@ PersonRepository.prototype.updatePerson = function (person, retValCallback) {
     if (!person || !person.uuid) {
         return callback('Cannot update person. Invalid args.');
     }
+
+    person = _.omit(person, 'extra');
 
     var query = [
         "MATCH (person:Person{ uuid:{uuid}})",
@@ -182,35 +194,6 @@ PersonRepository.prototype.deletePerson = function (uuid, retValCallback) {
         return retValCallback(null, true);
 
     });
-};
-
-
-/**
- * PersonRepository.prototype.listPersons -  Returns a list of all person objects saved in system
- *
- * @param  {type} retValCallback description
- * @return {type}                description
- */
-PersonRepository.prototype.listPersons = function (retValCallback) {
-    var query = [
-        "MATCH (person:Person)",
-        "RETURN person"
-    ]
-        .join('\n');
-
-    async.waterfall([
-        function (callback) {
-            db.query(query, {}, callback);
-        },
-        function (results, callback) {
-            var personList = [];
-            _.each(results, function (result) {
-                personList.push(new Person(result.person.id, result.person.data));
-            });
-
-            callback(null, personList);
-        }
-    ], retValCallback);
 };
 
 

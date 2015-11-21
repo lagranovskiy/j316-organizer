@@ -1,5 +1,6 @@
 var util = require('util'),
     Entity = require('./Entity'),
+    urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
 function validatePerson(person, callback) {
@@ -145,11 +146,21 @@ var Person = function (personData) {
          * Validates current person and returns array of failures or the object
          * @param callback
          */
-        validate: function(callback){
+        validate: function (callback) {
             validatePerson(this, callback);
+        },
+
+
+        /**
+         * Returns urls to the person relations
+         * @returns {*}
+         */
+        get extra() {
+            if (data.uuid) {
+                return urlMap.getUrlMap(urlMap.person, {uuid: data.uuid});
+            }
+            return null;
         }
-
-
 
 
     });

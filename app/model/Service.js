@@ -21,7 +21,7 @@ function validateService(service, callback) {
 var Service = function (serviceData, childServices) {
     var data = {};
 
-    if (postalAddressData) {
+    if (serviceData) {
         extend(data, serviceData);
     }
 

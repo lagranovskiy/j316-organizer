@@ -24,12 +24,47 @@ module.exports = function (app) {
     });
 
 
+    /**
+     * Operations for peson lists
+     */
     app.get('/person', personController.listPersons);
-    app.get('/person/:uuid', personController.findPerson);
 
+    /**
+     * Operations for a single person
+     */
+    app.get('/person/:uuid', personController.findPerson);
     app.post('/person', personController.createPerson);
     app.put('/person', personController.updatePerson);
     app.delete('/person/:uuid', personController.deletePerson);
+
+    /**
+     * Person Relation Services
+     */
+    app.get('/person/:uuid/relations', personController.findPerson);
+    app.get('/person/:uuid/relations/address', personController.findPerson);
+    app.get('/person/:uuid/relations/marriage', personController.findPerson);
+    app.get('/person/:uuid/relations/relatedPerson', personController.findPerson);
+    app.get('/person/:uuid/relations/child', personController.findPerson);
+    app.get('/person/:uuid/relations/parent', personController.findPerson);
+    app.get('/person/:uuid/relations/engagement', personController.findPerson);
+    app.get('/person/:uuid/relations/responsibility', personController.findPerson);
+
+    app.put('/person/:uuid/relation/address', personController.updatePerson);
+    app.put('/person/:uuid/relation/marriage', personController.updatePerson);
+    app.put('/person/:uuid/relation/relatedPerson', personController.updatePerson);
+    app.get('/person/:uuid/relations/child', personController.findPerson);
+    app.put('/person/:uuid/relation/parent', personController.updatePerson);
+    app.put('/person/:uuid/relation/engagement', personController.updatePerson);
+    app.put('/person/:uuid/relation/responsibility', personController.updatePerson);
+
+    app.delete('/person/:uuid/relation/address', personController.updatePerson);
+    app.delete('/person/:uuid/relation/marriage', personController.updatePerson);
+    app.delete('/person/:uuid/relation/relatedPerson', personController.updatePerson);
+    app.delete('/person/:uuid/relations/child', personController.findPerson);
+    app.delete('/person/:uuid/relation/parent', personController.updatePerson);
+    app.delete('/person/:uuid/relation/engagement', personController.updatePerson);
+    app.delete('/person/:uuid/relation/responsibility', personController.updatePerson);
+
 
     /**
      * Test if the caller gave the apiToken in the apiToken query param.
