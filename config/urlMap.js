@@ -31,7 +31,7 @@ var urlMap = {
                 location: config.hostname + 'organization/{uuid}/location'
             }
         },
-        postalAddress: {
+        postal: {
             self: config.hostname + 'postaladdress/{uuid}',
             relations: {}
         },

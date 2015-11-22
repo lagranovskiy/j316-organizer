@@ -26,7 +26,7 @@ var Organization = function (oraganizationData) {
     }
 
 
-    return extend(Organization.super_(oraganizationData.uuid), {
+    return extend(Organization.super_(data), {
 
         /**
          * Returns the organizationName

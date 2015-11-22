@@ -18,7 +18,7 @@ function validateService(service, callback) {
 /**
  * Service data entity
  **/
-var Service = function (serviceData, childServices) {
+var Service = function (serviceData) {
     var data = {};
 
     if (serviceData) {
@@ -26,7 +26,7 @@ var Service = function (serviceData, childServices) {
     }
 
 
-    return extend(Service.super_(serviceData.uuid), {
+    return extend(Service.super_(data), {
 
         /**
          * The name of the service
@@ -45,13 +45,7 @@ var Service = function (serviceData, childServices) {
             return data.zip;
         },
 
-        /**
-         * Returns the child services references if any
-         * @returns {*}
-         */
-        get childServices() {
-            return childServices;
-        },
+
         /**
          * Validates current postal address and returns array of failures or the object
          * @param callback

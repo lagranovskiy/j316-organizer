@@ -1,9 +1,12 @@
-var PersonService = require('./../business/PersonService');
+var CrudRepository = require('../model/CrudRepository');
+var crudRepository = new CrudRepository();
+var Person = require('../model/Person');
+var uuid = require('node-uuid');
 var _ = require('underscore');
+
 
 /**
  * Controller to provide person crud functionality
- * @returns {{processSMS77Confirmation: Function}}
  * @constructor
  */
 var PersonController = function () {
@@ -16,7 +19,7 @@ var PersonController = function () {
          * @param res
          * @param next
          */
-        findPerson:function(req,res,next) {
+        getPerson: function (req, res, next) {
 
             var personUUID = req.params.uuid;
 
@@ -24,12 +27,22 @@ var PersonController = function () {
                 return next('Error. uuid is empty');
             }
 
-            PersonService.findPerson(personUUID, function (err, result) {
+
+            if (!personUUID) {
+                return callback('Cannot get a person with uuid null');
+            }
+
+            crudRepository.getEntity('Person', personUUID, function (err, data) {
                 if (err) {
                     return next(err);
                 }
 
-                return res.send(result);
+                if (!data) {
+                    return callback('Cannot find person for the uuid + ' + uuid);
+                }
+                var createdPerson = new Person(data);
+                return res.send(createdPerson);
+
             });
         },
 
@@ -40,14 +53,23 @@ var PersonController = function () {
          * @param res
          * @param next
          */
-        listPersons:function(req,res,next) {
-            PersonService.listPersons(function (err, result) {
+        listPersons: function (req, res, next) {
+
+            crudRepository.listEntity('Person', function (err, personDataArray) {
                 if (err) {
                     return next(err);
                 }
 
-                return res.send(result);
+                var retVal = [];
+                _.each(personDataArray, function (personData) {
+                    retVal.push(new Person(personData));
+                });
+
+                return res.send(retVal);
+
             });
+
+
         },
 
 
@@ -65,12 +87,29 @@ var PersonController = function () {
                 return next('Error. Input is empty');
             }
 
-            PersonService.createPerson(personData, function (err, result) {
+            if (!personData.uuid) {
+                personData.uuid = uuid.v1();
+            }
+
+            var newPerson = new Person(personData);
+            newPerson.validate(function (err, validatedPerson) {
+
                 if (err) {
                     return next(err);
                 }
-                return res.send(result);
+
+                crudRepository.saveEntity('Person', validatedPerson, function (err, data) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    var createdPerson = new Person(data);
+                    return res.send(createdPerson);
+
+                });
             });
+
+
         },
 
         /**
@@ -88,13 +127,28 @@ var PersonController = function () {
                 return next('Error. Input is empty');
             }
 
-            PersonService.updatePerson(personData, function (err, result) {
+            if (!personData.uuid) {
+                return callback('Person can not be updated. uuid null');
+            }
+
+            var updatePerson = new Person(personData);
+
+            updatePerson.validate(function (err, validatedPerson) {
+
                 if (err) {
                     return next(err);
                 }
-                return res.send(result);
-            });
 
+                crudRepository.saveEntity('Person', validatedPerson, function (err, data) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    var updatedPerson = new Person(data);
+                    return res.send(updatedPerson);
+
+                });
+            });
         },
 
         /**
@@ -111,12 +165,14 @@ var PersonController = function () {
                 return next('Error. uuid is empty');
             }
 
-            PersonService.deletePerson(personUUID, function (err, result) {
+
+            crudRepository.deleteEntity('Person', personUuid, function (err, data) {
                 if (err) {
                     return next(err);
                 }
 
-                return res.send(result);
+                return res.send(data);
+
             });
 
         }

@@ -1,4 +1,5 @@
 var personController = require('./controller/PersonController');
+var postalAddressController = require('./controller/PostalAddressController');
 var config = require('../config/config');
 
 module.exports = function (app) {
@@ -32,7 +33,7 @@ module.exports = function (app) {
     /**
      * Operations for a single person
      */
-    app.get('/person/:uuid', personController.findPerson);
+    app.get('/person/:uuid', personController.getPerson);
     app.post('/person', personController.createPerson);
     app.put('/person', personController.updatePerson);
     app.delete('/person/:uuid', personController.deletePerson);
@@ -40,30 +41,39 @@ module.exports = function (app) {
     /**
      * Person Relation Services
      */
-    app.get('/person/:uuid/relations', personController.findPerson);
-    app.get('/person/:uuid/relations/address', personController.findPerson);
-    app.get('/person/:uuid/relations/marriage', personController.findPerson);
-    app.get('/person/:uuid/relations/relatedPerson', personController.findPerson);
-    app.get('/person/:uuid/relations/child', personController.findPerson);
-    app.get('/person/:uuid/relations/parent', personController.findPerson);
-    app.get('/person/:uuid/relations/engagement', personController.findPerson);
-    app.get('/person/:uuid/relations/responsibility', personController.findPerson);
+    app.get('/person/:uuid/relations', personController.listPersons);
+    app.get('/person/:uuid/relations/address', personController.listPersons);
+    app.get('/person/:uuid/relations/marriage', personController.listPersons);
+    app.get('/person/:uuid/relations/relatedPerson', personController.listPersons);
+    app.get('/person/:uuid/relations/child', personController.listPersons);
+    app.get('/person/:uuid/relations/parent', personController.listPersons);
+    app.get('/person/:uuid/relations/engagement', personController.listPersons);
+    app.get('/person/:uuid/relations/responsibility', personController.listPersons);
 
-    app.put('/person/:uuid/relation/address', personController.updatePerson);
-    app.put('/person/:uuid/relation/marriage', personController.updatePerson);
-    app.put('/person/:uuid/relation/relatedPerson', personController.updatePerson);
-    app.get('/person/:uuid/relations/child', personController.findPerson);
-    app.put('/person/:uuid/relation/parent', personController.updatePerson);
-    app.put('/person/:uuid/relation/engagement', personController.updatePerson);
-    app.put('/person/:uuid/relation/responsibility', personController.updatePerson);
+    app.put('/person/:uuid/relation/address', personController.listPersons);
+    app.put('/person/:uuid/relation/marriage', personController.listPersons);
+    app.put('/person/:uuid/relation/relatedPerson', personController.listPersons);
+    app.get('/person/:uuid/relations/child', personController.listPersons);
+    app.put('/person/:uuid/relation/parent', personController.listPersons);
+    app.put('/person/:uuid/relation/engagement', personController.listPersons);
+    app.put('/person/:uuid/relation/responsibility', personController.listPersons);
 
-    app.delete('/person/:uuid/relation/address', personController.updatePerson);
-    app.delete('/person/:uuid/relation/marriage', personController.updatePerson);
-    app.delete('/person/:uuid/relation/relatedPerson', personController.updatePerson);
-    app.delete('/person/:uuid/relations/child', personController.findPerson);
-    app.delete('/person/:uuid/relation/parent', personController.updatePerson);
-    app.delete('/person/:uuid/relation/engagement', personController.updatePerson);
-    app.delete('/person/:uuid/relation/responsibility', personController.updatePerson);
+    app.delete('/person/:uuid/relation/address', personController.listPersons);
+    app.delete('/person/:uuid/relation/marriage', personController.listPersons);
+    app.delete('/person/:uuid/relation/relatedPerson', personController.listPersons);
+    app.delete('/person/:uuid/relations/child', personController.listPersons);
+    app.delete('/person/:uuid/relation/parent', personController.listPersons);
+    app.delete('/person/:uuid/relation/engagement', personController.listPersons);
+    app.delete('/person/:uuid/relation/responsibility', personController.listPersons);
+
+
+    /**
+     * Operations for a single Postal Address
+     */
+    app.get('/postal', postalAddressController.listPostalAddress);
+    app.get('/postal/:uuid', postalAddressController.getPostalAddress);
+    app.put('/postal', postalAddressController.savePostalAddress);
+    app.delete('/postal/:uuid', postalAddressController.deletePostalAddress);
 
 
     /**

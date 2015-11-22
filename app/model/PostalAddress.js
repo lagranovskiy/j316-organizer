@@ -1,5 +1,6 @@
 var util = require('util'),
     Entity = require('./Entity'),
+    urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
 function validatePostalAddress(postal, callback) {
@@ -36,12 +37,12 @@ var PostalAddress = function (postalAddressData) {
     }
 
 
-    return extend(PostalAddress.super_(postalAddressData.uuid), {
+    return extend(PostalAddress.super_(data), {
 
         /**
          * Returns the street information
          *
-         * @returns {*}
+         * @returns {*}•
          */
         get street() {
             return data.street;
@@ -85,12 +86,22 @@ var PostalAddress = function (postalAddressData) {
          */
         validate: function (callback) {
             validatePostalAddress(this, callback);
-        }
+        },
 
+        /**
+         * Returns urls to the postal address relations
+         * @returns {*}
+         */
+        get extra() {
+            if (data.uuid) {
+                return urlMap.getUrlMap(urlMap.postal, {uuid: data.uuid});
+            }
+            return null;
+        }
 
     });
 };
 
 util.inherits(PostalAddress, Entity);
 
-module.exports = Person;
+module.exports = PostalAddress;

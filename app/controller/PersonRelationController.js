@@ -1,9 +1,7 @@
-var PersonService = require('./../business/PersonService');
 var _ = require('underscore');
 
 /**
  * Controller to provide person relation crud functionality
- * @returns {{processSMS77Confirmation: Function}}
  * @constructor
  */
 var PersonRelationController = function () {

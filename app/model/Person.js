@@ -33,7 +33,7 @@ var Person = function (personData) {
     }
 
 
-    return extend(Person.super_(personData.uuid), {
+    return extend(Person.super_(data), {
 
         /**
          * Forename of the person
