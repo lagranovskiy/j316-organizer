@@ -27,16 +27,18 @@ var OrganizationProvidesService = function (organizationUUID, relationData, ref)
     }
 
     return extend(OrganizationProvidesService.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Organization,
-        relationMap.relations.Organization.PROVIDES_SERVICE,
-        relationMap.objects.Service,
-        organizationUUID,
-        null), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Organization,
+            relationMap.relations.Organization.PROVIDES_SERVICE,
+            relationMap.objects.Service,
+            organizationUUID,
+            null,
+            false),
+        {
 
-        // Nothing defined yet
-    });
+            // Nothing defined yet
+        });
 };
 
 util.inherits(OrganizationProvidesService, Relation);

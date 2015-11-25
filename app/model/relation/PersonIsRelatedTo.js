@@ -27,25 +27,26 @@ var PersonIsRelatedTo = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonIsRelatedTo.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Person,
-        relationMap.relations.Person.IS_RELATED_TO,
-        relationMap.objects.Person,
-        personUUID,
-        null
-    ), {
-        // TODO: Undirected relation. Add logic!!
+            relationData.uuid,
+            ref,
+            relationMap.objects.Person,
+            relationMap.relations.Person.IS_RELATED_TO,
+            relationMap.objects.Person,
+            personUUID,
+            null,
+            true
+        ),
+        {
 
-        /**
-         * Indicates the date the member is active since
-         * @returns {*}
-         */
-        get relationInfo() {
-            return data.relationInfo;
-        }
+            /**
+             * Indicates the date the member is active since
+             * @returns {*}
+             */
+            get relationInfo() {
+                return data.relationInfo;
+            }
 
-    });
+        });
 };
 
 util.inherits(PersonIsRelatedTo, Relation);

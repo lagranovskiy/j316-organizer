@@ -26,25 +26,26 @@ var PersonIsMarriedWith = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonIsMarriedWith.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Person,
-        relationMap.relations.Person.IS_MARRIED_WITH,
-        relationMap.objects.Person,
-        personUUID,
-        null), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Person,
+            relationMap.relations.Person.IS_MARRIED_WITH,
+            relationMap.objects.Person,
+            personUUID,
+            null,
+            true),
+        {
 
-        // TODO: Undirected relation. Add logic!!
 
-        /**
-         * Indicates the date the person married
-         * @returns {*}
-         */
-        get marriedDate() {
-            return data.marriedDate;
-        }
+            /**
+             * Indicates the date the person married
+             * @returns {*}
+             */
+            get marriedDate() {
+                return data.marriedDate;
+            }
 
-    });
+        });
 };
 
 util.inherits(PersonIsMarriedWith, Relation);

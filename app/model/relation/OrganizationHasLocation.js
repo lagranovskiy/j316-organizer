@@ -27,17 +27,19 @@ var OrganizationHasLocation = function (organizationUUID, relationData, ref) {
     }
 
     return extend(OrganizationHasLocation.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Organization,
-        relationMap.relations.Organization.HAS_LOCATION,
-        relationMap.objects.PostalAddress,
-        organizationUUID,
-        null), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Organization,
+            relationMap.relations.Organization.HAS_LOCATION,
+            relationMap.objects.PostalAddress,
+            organizationUUID,
+            null,
+            false),
+        {
 
-        // Nothing to define yet
+            // Nothing to define yet
 
-    });
+        });
 };
 
 util.inherits(OrganizationHasLocation, Relation);

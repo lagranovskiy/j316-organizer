@@ -25,23 +25,25 @@ var ServiceParticipatedPerson = function (serviceUUID, relationData, ref) {
     }
 
     return extend(ServiceParticipatedPerson.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Person,
-        relationMap.relations.Person.PARTICIPATE_IN,
-        relationMap.objects.Service,
-        null,
-        serviceUUID), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Person,
+            relationMap.relations.Person.PARTICIPATE_IN,
+            relationMap.objects.Service,
+            null,
+            serviceUUID,
+            false),
+        {
 
-        /**
-         * Comment
-         * @returns {*}
-         */
-        get comment() {
-            return data.comment;
-        }
+            /**
+             * Comment
+             * @returns {*}
+             */
+            get comment() {
+                return data.comment;
+            }
 
-    });
+        });
 };
 
 util.inherits(ServiceParticipatedPerson, Relation);

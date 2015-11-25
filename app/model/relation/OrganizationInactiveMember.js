@@ -27,23 +27,25 @@ var OrganizationInactiveMember = function (organizationUUID, relationData, ref) 
     }
 
     return extend(OrganizationInactiveMember.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Organization,
-        relationMap.relations.Organization.HAS_INACTIVE_MEMBER,
-        relationMap.objects.Person,
-        organizationUUID,
-        null), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Organization,
+            relationMap.relations.Organization.HAS_INACTIVE_MEMBER,
+            relationMap.objects.Person,
+            organizationUUID,
+            null,
+            false),
+        {
 
-        /**
-         * Indicates the date the member is inactive since
-         * @returns {*}
-         */
-        get inactiveSince() {
-            return data.inactiveSince;
-        }
+            /**
+             * Indicates the date the member is inactive since
+             * @returns {*}
+             */
+            get inactiveSince() {
+                return data.inactiveSince;
+            }
 
-    });
+        });
 };
 
 util.inherits(OrganizationInactiveMember, Relation);

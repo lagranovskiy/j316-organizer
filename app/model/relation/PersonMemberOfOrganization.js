@@ -26,23 +26,25 @@ var PersonMemberOfOrganization = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonMemberOfOrganization.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Organization,
-        relationMap.relations.Organization.HAS_ACTIVE_MEMBER,
-        relationMap.objects.Person,
-        null,
-        personUUID), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Organization,
+            relationMap.relations.Organization.HAS_ACTIVE_MEMBER,
+            relationMap.objects.Person,
+            null,
+            personUUID,
+            false),
+        {
 
-        /**
-         * Indicates the date the member is active since
-         * @returns {*}
-         */
-        get activeSince() {
-            return data.activeSince;
-        }
+            /**
+             * Indicates the date the member is active since
+             * @returns {*}
+             */
+            get activeSince() {
+                return data.activeSince;
+            }
 
-    });
+        });
 };
 
 util.inherits(PersonMemberOfOrganization, Relation);

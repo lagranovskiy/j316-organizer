@@ -8,10 +8,11 @@
  * @param targetType type of the target object
  * @param sourceUUID uuid of the source or 'null'
  * @param targetUUID uuid of the target or 'null'
+ * @param ignoreDirection if true, the direction is not defined
  * @returns {{relationUUID, ref, getMetaInfo: Function}}
  * @constructor
  */
-function Relation(relationUUID, ref, sourceType, relationType, targetType, sourceUUID, targetUUID) {
+function Relation(relationUUID, ref, sourceType, relationType, targetType, sourceUUID, targetUUID, ignoreDirection) {
 
 
     return {
@@ -41,7 +42,8 @@ function Relation(relationUUID, ref, sourceType, relationType, targetType, sourc
                 sourceUUID: sourceUUID,
                 relationType: relationType,
                 targetType: targetType,
-                targetUUID: targetUUID
+                targetUUID: targetUUID,
+                ignoreDirection: ignoreDirection
             };
 
             return meta;

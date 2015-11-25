@@ -26,40 +26,42 @@ var PersonIsResponsibleForService = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonIsResponsibleForService.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Person,
-        relationMap.relations.Person.IS_RESPONSIBLE_FOR,
-        relationMap.objects.Service,
-        personUUID,
-        null
-    ), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Person,
+            relationMap.relations.Person.IS_RESPONSIBLE_FOR,
+            relationMap.objects.Service,
+            personUUID,
+            null,
+            false
+        ),
+        {
 
-        /**
-         * Indicates the date the member is active since
-         * @returns {*}
-         */
-        get functionName() {
-            return data.functionName;
-        },
+            /**
+             * Indicates the date the member is active since
+             * @returns {*}
+             */
+            get functionName() {
+                return data.functionName;
+            },
 
-        /**
-         * Date since the person is responsible for the service
-         * @returns {*}
-         */
-        get responsibleSince() {
-            return data.responsibleSince;
-        },
+            /**
+             * Date since the person is responsible for the service
+             * @returns {*}
+             */
+            get responsibleSince() {
+                return data.responsibleSince;
+            },
 
-        /**
-         * Comment
-         * @returns {*}
-         */
-        get comment() {
-            return data.comment;
-        }
+            /**
+             * Comment
+             * @returns {*}
+             */
+            get comment() {
+                return data.comment;
+            }
 
-    });
+        });
 };
 
 util.inherits(PersonIsResponsibleForService, Relation);

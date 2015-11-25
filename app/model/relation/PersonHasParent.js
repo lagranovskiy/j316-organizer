@@ -25,16 +25,18 @@ var PersonHasParent = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonHasParent.super_(
-        relationData.uuid,
-        ref,
-        relationMap.objects.Person,
-        relationMap.relations.Person.HAS_CHILD,
-        relationMap.objects.Person,
-        null,
-        personUUID), {
+            relationData.uuid,
+            ref,
+            relationMap.objects.Person,
+            relationMap.relations.Person.HAS_CHILD,
+            relationMap.objects.Person,
+            null,
+            personUUID,
+            false),
+        {
 
-        // Nothing defined yet
-    });
+            // Nothing defined yet
+        });
 };
 
 util.inherits(PersonHasParent, Relation);
