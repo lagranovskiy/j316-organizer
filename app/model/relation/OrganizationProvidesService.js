@@ -3,11 +3,22 @@ var util = require('util'),
     urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
+var relationMap = require('../../config/relationMap');
 
 /**
  * OrganizationProvidesService relation entity
- **/
-var OrganizationProvidesService = function (relationData, ref) {
+ *
+ * Relation (Organization)-[PROVIDES_SERVICE]->(Service)
+ *
+ * Represents an a services provided by the organization
+ *
+ * @param organizationUUID uuid of the organization
+ * @param relationData data to be stored on relation
+ * @param ref referenced object if any
+ * @returns {*}
+ * @constructor
+ * */
+var OrganizationProvidesService = function (organizationUUID, relationData, ref) {
 
     var data = {};
 
@@ -15,10 +26,16 @@ var OrganizationProvidesService = function (relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(OrganizationProvidesService.super_(relationData.uuid, ref), {
+    return extend(OrganizationProvidesService.super_(
+        relationData.uuid,
+        ref,
+        relationMap.objects.Organization,
+        relationMap.relations.Organization.PROVIDES_SERVICE,
+        relationMap.objects.Service,
+        organizationUUID,
+        null), {
 
-
-
+        // Nothing defined yet
     });
 };
 

@@ -3,11 +3,21 @@ var util = require('util'),
     urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
+var relationMap = require('../../config/relationMap');
 
 /**
- * PersonIsResponsibleForService relation entity
- **/
-var PersonIsResponsibleForService = function (relationData, ref) {
+ * Relation (Person)-[IS_RESPONSIBLE_FOR]->(Service)
+ *
+ * Represents person service responsibilities
+ *
+ *
+ * @param personUUID uuid of the person to get responsibilities of
+ * @param relationData relationData data to be stored on relation
+ * @param ref ref referenced object if any
+ * @returns {*}
+ * @constructor
+ */
+var PersonIsResponsibleForService = function (personUUID, relationData, ref) {
 
     var data = {};
 
@@ -15,7 +25,15 @@ var PersonIsResponsibleForService = function (relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(PersonIsResponsibleForService.super_(relationData.uuid, ref), {
+    return extend(PersonIsResponsibleForService.super_(
+        relationData.uuid,
+        ref,
+        relationMap.objects.Person,
+        relationMap.relations.Person.IS_RESPONSIBLE_FOR,
+        relationMap.objects.Service,
+        personUUID,
+        null
+    ), {
 
         /**
          * Indicates the date the member is active since

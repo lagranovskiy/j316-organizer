@@ -3,7 +3,7 @@ var crudRepository = new CrudRepository();
 var Service = require('../model/Service');
 var uuid = require('node-uuid');
 var _ = require('underscore');
-
+var relationMap = require('../../config/relationMap');
 /**
  * Controller to provide service crud functionality
  * @constructor
@@ -27,7 +27,7 @@ var ServiceController = function () {
             }
 
             console.info('Getting Service with uuid: ' + serviceUUID);
-            crudRepository.getEntity('Service', serviceUUID, function (err, data) {
+            crudRepository.getEntity(relationMap.objects.Service, serviceUUID, function (err, data) {
                 if (err) {
                     return next(err);
                 }
@@ -50,7 +50,7 @@ var ServiceController = function () {
          * @param next
          */
         listService: function (req, res, next) {
-            crudRepository.listEntity('Service', function (err, serviceRsArray) {
+            crudRepository.listEntity(relationMap.objects.Service, function (err, serviceRsArray) {
                 if (err) {
                     return next(err);
                 }
@@ -97,7 +97,7 @@ var ServiceController = function () {
                 }
                 console.info('Service with uuid: ' + serviceData.uuid + ' is validated successfully. Continue with saving.');
 
-                crudRepository.saveEntity('Service', validatesServiceEntity, function (err, data) {
+                crudRepository.saveEntity(relationMap.objects.Service, validatesServiceEntity, function (err, data) {
                     if (err) {
                         return next(err);
                     }
@@ -119,15 +119,12 @@ var ServiceController = function () {
          */
         deleteService: function (req, res, next) {
 
-            var serviceUUID = req.params.uuid;
-
             if (!serviceUUID) {
                 return next('Error. uuid is empty');
             }
 
-
             console.info('Deleting Service with uuid: ' + serviceUUID);
-            crudRepository.deleteEntity('Service', serviceUUID, function (err, result) {
+            crudRepository.deleteEntity(relationMap.objects.Service, serviceUUID, function (err, result) {
                 if (err) {
                     return next(err);
                 }

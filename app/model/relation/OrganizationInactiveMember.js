@@ -3,11 +3,22 @@ var util = require('util'),
     urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
+var relationMap = require('../../config/relationMap');
 
 /**
  * OrganizationInactiveMember relation entity
- **/
-var OrganizationInactiveMember = function (relationData, ref) {
+ *
+ * Relation (Organization)-[HAS_INACTIVE_MEMBER]->(Person)
+ *
+ * Represents an inactive member of the organization
+ *
+ * @param organizationUUID uuid of the organization
+ * @param relationData data to be stored on relation
+ * @param ref referenced object if any
+ * @returns {*}
+ * @constructor
+ */
+var OrganizationInactiveMember = function (organizationUUID, relationData, ref) {
 
     var data = {};
 
@@ -15,7 +26,14 @@ var OrganizationInactiveMember = function (relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(OrganizationInactiveMember.super_(relationData.uuid, ref), {
+    return extend(OrganizationInactiveMember.super_(
+        relationData.uuid,
+        ref,
+        relationMap.objects.Organization,
+        relationMap.relations.Organization.HAS_INACTIVE_MEMBER,
+        relationMap.objects.Person,
+        organizationUUID,
+        null), {
 
         /**
          * Indicates the date the member is inactive since

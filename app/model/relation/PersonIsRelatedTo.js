@@ -3,11 +3,22 @@ var util = require('util'),
     urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
+var relationMap = require('../../config/relationMap');
 
 /**
- * PersonIsRelatedTo relation entity
- **/
-var PersonIsRelatedTo = function (relationData, ref) {
+ * Relation (Person)-[IS_RELATED_TO]->(Person)
+ *
+ * Represents person related persons
+ *
+ * Relation is bidirectional! Special case.
+ *
+ * @param personUUID uuid of the person to get its married with person
+ * @param relationData relationData data to be stored on relation
+ * @param ref ref referenced object if any
+ * @returns {*}
+ * @constructor
+ */
+var PersonIsRelatedTo = function (personUUID, relationData, ref) {
 
     var data = {};
 
@@ -15,7 +26,16 @@ var PersonIsRelatedTo = function (relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(PersonIsRelatedTo.super_(relationData.uuid, ref), {
+    return extend(PersonIsRelatedTo.super_(
+        relationData.uuid,
+        ref,
+        relationMap.objects.Person,
+        relationMap.relations.Person.IS_RELATED_TO,
+        relationMap.objects.Person,
+        personUUID,
+        null
+    ), {
+        // TODO: Undirected relation. Add logic!!
 
         /**
          * Indicates the date the member is active since

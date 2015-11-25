@@ -2,12 +2,23 @@ var util = require('util'),
     Relation = require('./Relation'),
     urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
+var relationMap = require('../../config/relationMap');
 
 
 /**
  * OrganizationHasLocation relation entity
+ *
+ * Relation (Organization)-[HAS_LOCATION]->(PostalAddress)
+ *
+ * Represents an a postal address of organization
+ *
+ * @param organizationUUID uuid of the organization
+ * @param relationData data to be stored on relation
+ * @param ref referenced object if any
+ * @returns {*}
+ * @constructor
  **/
-var OrganizationHasLocation = function (relationData, ref) {
+var OrganizationHasLocation = function (organizationUUID, relationData, ref) {
 
     var data = {};
 
@@ -15,9 +26,16 @@ var OrganizationHasLocation = function (relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(OrganizationHasLocation.super_(relationData.uuid, ref), {
+    return extend(OrganizationHasLocation.super_(
+        relationData.uuid,
+        ref,
+        relationMap.objects.Organization,
+        relationMap.relations.Organization.HAS_LOCATION,
+        relationMap.objects.PostalAddress,
+        organizationUUID,
+        null), {
 
-
+        // Nothing to define yet
 
     });
 };

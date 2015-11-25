@@ -8,15 +8,15 @@ var relationMap = require('../../config/relationMap');
 /**
  * Relation (Person)-[HAS_CHILD]->(Person)
  *
- * Represents children of a person
+ * Represents parents of a person
  *
- * @param personUUID uuid of the person to get children of
+ * @param personUUID uuid of the person to get parent of
  * @param relationData relationData data to be stored on relation
  * @param ref ref referenced object if any
  * @returns {*}
  * @constructor
  */
-var PersonHasChild = function (personUUID, relationData, ref) {
+var PersonHasParent = function (personUUID, relationData, ref) {
 
     var data = {};
 
@@ -24,19 +24,19 @@ var PersonHasChild = function (personUUID, relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(PersonHasChild.super_(
+    return extend(PersonHasParent.super_(
         relationData.uuid,
         ref,
         relationMap.objects.Person,
         relationMap.relations.Person.HAS_CHILD,
         relationMap.objects.Person,
-        personUUID,
-        null), {
+        null,
+        personUUID), {
 
         // Nothing defined yet
     });
 };
 
-util.inherits(PersonHasChild, Relation);
+util.inherits(PersonHasParent, Relation);
 
-module.exports = PersonHasChild;
+module.exports = PersonHasParent;

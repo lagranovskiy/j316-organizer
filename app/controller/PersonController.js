@@ -3,7 +3,7 @@ var crudRepository = new CrudRepository();
 var Person = require('../model/Person');
 var uuid = require('node-uuid');
 var _ = require('underscore');
-
+var relationMap = require('../../config/relationMap');
 
 /**
  * Controller to provide person crud functionality
@@ -29,16 +29,16 @@ var PersonController = function () {
 
 
             if (!personUUID) {
-                return callback('Cannot get a person with uuid null');
+                return next('Cannot get a person with uuid null');
             }
 
-            crudRepository.getEntity('Person', personUUID, function (err, data) {
+            crudRepository.getEntity(relationMap.objects.Person, personUUID, function (err, data) {
                 if (err) {
                     return next(err);
                 }
 
                 if (!data) {
-                    return callback('Cannot find person for the uuid + ' + uuid);
+                    return next('Cannot find person for the uuid + ' + uuid);
                 }
                 var createdPerson = new Person(data);
                 return res.send(createdPerson);
@@ -55,7 +55,7 @@ var PersonController = function () {
          */
         listPersons: function (req, res, next) {
 
-            crudRepository.listEntity('Person', function (err, personDataArray) {
+            crudRepository.listEntity(relationMap.objects.Person, function (err, personDataArray) {
                 if (err) {
                     return next(err);
                 }
@@ -98,7 +98,7 @@ var PersonController = function () {
                     return next(err);
                 }
 
-                crudRepository.saveEntity('Person', validatedPerson, function (err, data) {
+                crudRepository.saveEntity(relationMap.objects.Person, validatedPerson, function (err, data) {
                     if (err) {
                         return next(err);
                     }
@@ -128,7 +128,7 @@ var PersonController = function () {
             }
 
             if (!personData.uuid) {
-                return callback('Person can not be updated. uuid null');
+                return next('Person can not be updated. uuid null');
             }
 
             var updatePerson = new Person(personData);
@@ -139,7 +139,7 @@ var PersonController = function () {
                     return next(err);
                 }
 
-                crudRepository.saveEntity('Person', validatedPerson, function (err, data) {
+                crudRepository.saveEntity(relationMap.objects.Person, validatedPerson, function (err, data) {
                     if (err) {
                         return next(err);
                     }
@@ -166,7 +166,7 @@ var PersonController = function () {
             }
 
 
-            crudRepository.deleteEntity('Person', personUuid, function (err, data) {
+            crudRepository.deleteEntity(relationMap.objects.Person, personUUID, function (err, data) {
                 if (err) {
                     return next(err);
                 }

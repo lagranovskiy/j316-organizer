@@ -2,6 +2,7 @@ var CrudRepository = require('../model/CrudRepository');
 var crudRepository = new CrudRepository();
 var Organization = require('../model/Organization');
 var uuid = require('node-uuid');
+var relationMap = require('../../config/relationMap');
 var _ = require('underscore');
 
 /**
@@ -27,7 +28,7 @@ var ServiceController = function () {
             }
 
             console.info('Getting Organization with uuid: ' + organizationUUID);
-            crudRepository.getEntity('Organization', organizationUUID, function (err, data) {
+            crudRepository.getEntity(relationMap.objects.Organization, organizationUUID, function (err, data) {
                 if (err) {
                     return next(err);
                 }
@@ -50,7 +51,7 @@ var ServiceController = function () {
          * @param next
          */
         listOrganization: function (req, res, next) {
-            crudRepository.listEntity('Organization', function (err, organizationRsArray) {
+            crudRepository.listEntity(relationMap.objects.Organization, function (err, organizationRsArray) {
                 if (err) {
                     return next(err);
                 }
@@ -97,7 +98,7 @@ var ServiceController = function () {
                 }
                 console.info('Organization with uuid: ' + organizationData.uuid + ' is validated successfully. Continue with saving.');
 
-                crudRepository.saveEntity('Organization', organizationValidatedData, function (err, data) {
+                crudRepository.saveEntity(relationMap.objects.Organization, organizationValidatedData, function (err, data) {
                     if (err) {
                         return next(err);
                     }
@@ -127,7 +128,7 @@ var ServiceController = function () {
 
 
             console.info('Deleting Organization with uuid: ' + organizationUUID);
-            crudRepository.deleteEntity('Organization', organizationUUID, function (err, result) {
+            crudRepository.deleteEntity(relationMap.objects.Organization, organizationUUID, function (err, result) {
                 if (err) {
                     return next(err);
                 }

@@ -3,11 +3,20 @@ var util = require('util'),
     urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
+var relationMap = require('../../config/relationMap');
 
 /**
- * PersonIsHousekeeperOfPostalAddress relation entity
- **/
-var PersonIsHousekeeperOfPostalAddress = function (relationData, ref) {
+* Relation (Person)-[HOUSEKEEPER_OF]->(PostalAddress)
+*
+* Represents postal address where person is the housekeeper
+*
+* @param personUUID uuid of the person to get postal addresses of
+* @param relationData relationData data to be stored on relation
+* @param ref ref referenced object if any
+* @returns {*}
+* @constructor
+*/
+var PersonIsHousekeeperOfPostalAddress = function (personUUID, relationData, ref) {
 
     var data = {};
 
@@ -15,9 +24,16 @@ var PersonIsHousekeeperOfPostalAddress = function (relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(PersonIsHousekeeperOfPostalAddress.super_(relationData.uuid, ref), {
+    return extend(PersonIsHousekeeperOfPostalAddress.super_(
+        relationData.uuid,
+        ref,
+        relationMap.objects.Person,
+        relationMap.relations.Person.HOUSEKEEPER_OF,
+        relationMap.objects.PostalAddress,
+        personUUID,
+        null), {
 
-
+        // Nothing defined yet
     });
 };
 

@@ -4,21 +4,20 @@ var util = require('util'),
     extend = require('object-extend');
 var relationMap = require('../../config/relationMap');
 
-
 /**
- * OrganizationActiveMember.
+ * PersonMemberOfOrganization.
  *
  * Relation (Organization)-[HAS_ACTIVE_MEMBER]->(Person)
  *
- * Represents an active member of the organization
+ * Represents organizations where the Person is active member
  *
- * @param organizationUUID uuid of the organization
- * @param relationData data to be stored on relation
- * @param ref referenced object if any
+ * @param personUUID person uuid to get active memeberships of
+ * @param relationData relation data
+ * @param ref referenced object
  * @returns {*}
  * @constructor
- **/
-var OrganizationActiveMember = function (organizationUUID, relationData, ref) {
+ */
+var PersonMemberOfOrganization = function (personUUID, relationData, ref) {
 
     var data = {};
 
@@ -26,14 +25,14 @@ var OrganizationActiveMember = function (organizationUUID, relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(OrganizationActiveMember.super_(
+    return extend(PersonMemberOfOrganization.super_(
         relationData.uuid,
         ref,
         relationMap.objects.Organization,
         relationMap.relations.Organization.HAS_ACTIVE_MEMBER,
         relationMap.objects.Person,
-        organizationUUID,
-        null), {
+        null,
+        personUUID), {
 
         /**
          * Indicates the date the member is active since
@@ -46,6 +45,6 @@ var OrganizationActiveMember = function (organizationUUID, relationData, ref) {
     });
 };
 
-util.inherits(OrganizationActiveMember, Relation);
+util.inherits(PersonMemberOfOrganization, Relation);
 
-module.exports = OrganizationActiveMember;
+module.exports = PersonMemberOfOrganization;

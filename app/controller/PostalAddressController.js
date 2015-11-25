@@ -3,6 +3,7 @@ var crudRepository = new CrudRepository();
 var PostalAddress = require('../model/PostalAddress');
 var uuid = require('node-uuid');
 var _ = require('underscore');
+var relationMap = require('../../config/relationMap');
 
 /**
  * Controller to provide postal address crud functionality
@@ -27,7 +28,7 @@ var PersonController = function () {
             }
 
             console.info('Getting postal address with uuid: ' + postalAddressUUID);
-            crudRepository.getEntity('PostalAddress', postalAddressUUID, function (err, data) {
+            crudRepository.getEntity(relationMap.objects.PostalAddress, postalAddressUUID, function (err, data) {
                 if (err) {
                     return next(err);
                 }
@@ -50,7 +51,7 @@ var PersonController = function () {
          * @param next
          */
         listPostalAddress: function (req, res, next) {
-            crudRepository.listEntity('PostalAddress', function (err, postalAddressRs) {
+            crudRepository.listEntity(relationMap.objects.PostalAddress, function (err, postalAddressRs) {
                 if (err) {
                     return next(err);
                 }
@@ -97,7 +98,7 @@ var PersonController = function () {
                 }
                 console.info('Postal address with uuid: ' + postalAddressData.uuid + ' is validated successfully. Continue with saving.');
 
-                crudRepository.saveEntity('PostalAddress', validatedPostalAddress, function (err, data) {
+                crudRepository.saveEntity(relationMap.objects.PostalAddress, validatedPostalAddress, function (err, data) {
                     if (err) {
                         return next(err);
                     }
@@ -127,7 +128,7 @@ var PersonController = function () {
 
 
             console.info('Deleting address with uuid: ' + postalUUID);
-            crudRepository.deleteEntity('PostalAddress', postalUUID, function (err, result) {
+            crudRepository.deleteEntity(relationMap.objects.PostalAddress, postalUUID, function (err, result) {
                 if (err) {
                     return next(err);
                 }

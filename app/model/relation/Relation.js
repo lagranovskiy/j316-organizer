@@ -1,11 +1,17 @@
 /**
  * Represents a identifiable Relation
  *
- * @param {Object} node Object as read from the database.
- * @returns {Tag}
+ * @param relationUUID uuid of the relation
+ * @param ref referenced (asked) object. It depends of the answered question what kind of object is referenced. It can be target or source object according to special relation
+ * @param sourceType type of the source object
+ * @param relationType type of the relation
+ * @param targetType type of the target object
+ * @param sourceUUID uuid of the source or 'null'
+ * @param targetUUID uuid of the target or 'null'
+ * @returns {{relationUUID, ref, getMetaInfo: Function}}
  * @constructor
  */
-function Relation(uuid, ref, sourceType, relationType, targetType, invertRelation) {
+function Relation(relationUUID, ref, sourceType, relationType, targetType, sourceUUID, targetUUID) {
 
 
     return {
@@ -13,8 +19,8 @@ function Relation(uuid, ref, sourceType, relationType, targetType, invertRelatio
         /**
          * Returns a unique identifier of the relation
          */
-        get uuid() {
-            return uuid;
+        get relationUUID() {
+            return relationUUID;
         },
 
         /**
@@ -24,17 +30,19 @@ function Relation(uuid, ref, sourceType, relationType, targetType, invertRelatio
             return ref;
         },
 
+        /**
+         * Returns the information about relation
+         *
+         * @returns {{sourceType: *, sourceUUID: *, relationType: *, targetType: *, targetUUID: *}}
+         */
         getMetaInfo: function () {
             var meta = {
                 sourceType: sourceType,
+                sourceUUID: sourceUUID,
                 relationType: relationType,
-                targetType: targetType
+                targetType: targetType,
+                targetUUID: targetUUID
             };
-
-            if (invertRelation && invertRelation === true) {
-                meta.sourceType = targetType;
-                meta.targetType = sourceType;
-            }
 
             return meta;
         }

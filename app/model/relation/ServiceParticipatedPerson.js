@@ -8,15 +8,15 @@ var relationMap = require('../../config/relationMap');
 /**
  * Relation (Person)-[PARTICIPATE_IN]->(Service)
  *
- * Represents person services he participates in
+ * Represents service's persons who participate
  *
- * @param personUUID uuid of the person to get participations of
+ * @param serviceUUID uuid of the service to get participants of
  * @param relationData relationData data to be stored on relation
  * @param ref ref referenced object if any
  * @returns {*}
  * @constructor
  */
-var PersonParticipateInService = function (personUUID, relationData, ref) {
+var ServiceParticipatedPerson = function (serviceUUID, relationData, ref) {
 
     var data = {};
 
@@ -24,14 +24,14 @@ var PersonParticipateInService = function (personUUID, relationData, ref) {
         extend(data, relationData);
     }
 
-    return extend(PersonParticipateInService.super_(
+    return extend(ServiceParticipatedPerson.super_(
         relationData.uuid,
         ref,
         relationMap.objects.Person,
         relationMap.relations.Person.PARTICIPATE_IN,
         relationMap.objects.Service,
-        personUUID,
-        null), {
+        null,
+        serviceUUID), {
 
         /**
          * Comment
@@ -44,6 +44,6 @@ var PersonParticipateInService = function (personUUID, relationData, ref) {
     });
 };
 
-util.inherits(PersonParticipateInService, Relation);
+util.inherits(ServiceParticipatedPerson, Relation);
 
-module.exports = PersonParticipateInService;
+module.exports = ServiceParticipatedPerson;

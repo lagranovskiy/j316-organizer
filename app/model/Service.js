@@ -11,7 +11,7 @@ function validateService(service, callback) {
     if (retVal.length > 0) {
         callback(retVal);
     } else {
-        callback(null, postal);
+        callback(null, service);
     }
 }
 
