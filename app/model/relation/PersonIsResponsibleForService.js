@@ -26,7 +26,7 @@ var PersonIsResponsibleForService = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonIsResponsibleForService.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Person,
             relationMap.relations.Person.IS_RESPONSIBLE_FOR,

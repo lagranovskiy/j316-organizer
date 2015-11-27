@@ -25,7 +25,7 @@ var ServiceParticipatedPerson = function (serviceUUID, relationData, ref) {
     }
 
     return extend(ServiceParticipatedPerson.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Person,
             relationMap.relations.Person.PARTICIPATE_IN,

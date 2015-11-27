@@ -27,7 +27,7 @@ var OrganizationActiveMember = function (organizationUUID, relationData, ref) {
     }
 
     return extend(OrganizationActiveMember.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Organization,
             relationMap.relations.Organization.HAS_ACTIVE_MEMBER,

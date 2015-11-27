@@ -27,7 +27,7 @@ var OrganizationProvidesService = function (organizationUUID, relationData, ref)
     }
 
     return extend(OrganizationProvidesService.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Organization,
             relationMap.relations.Organization.PROVIDES_SERVICE,

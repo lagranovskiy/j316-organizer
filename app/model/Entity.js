@@ -30,7 +30,7 @@ function Entity(data) {
         },
 
         /**
-         * Returns the date as a entity first created
+         * Returns the date as a entity first deleted
          */
         get deleted() {
             return data.deleted;

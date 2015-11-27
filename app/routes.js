@@ -1,4 +1,5 @@
 var personController = require('./controller/PersonController');
+var personRelationController = require('./controller/PersonRelationController');
 var postalAddressController = require('./controller/PostalAddressController');
 var serviceController = require('./controller/ServiceController');
 var organizationController = require('./controller/OrganizationController');
@@ -43,36 +44,35 @@ module.exports = function (app) {
     /**
      * Person Relation Services
      */
-    app.get('/person/:uuid/relations', personController.listPersons);
+    app.get('/person/:uuid/relations', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/address', personController.listPersons);
-    app.put('/person/:uuid/relation/address', personController.listPersons);
-    app.delete('/person/:uuid/relation/address', personController.listPersons);
+    app.get('/person/:uuid/relations/address', personRelationController.listPersons);
+    app.put('/person/:uuid/relation/address', personRelationController.listPersons);
+    app.delete('/person/:uuid/relation/address', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/marriage', personController.listPersons);
-    app.put('/person/:uuid/relation/marriage', personController.listPersons);
-    app.delete('/person/:uuid/relation/marriage', personController.listPersons);
+    app.get('/person/:uuid/relations/marriage', personRelationController.listPersons);
+    app.put('/person/:uuid/relation/marriage', personRelationController.listPersons);
+    app.delete('/person/:uuid/relation/marriage', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/relatedPerson', personController.listPersons);
-    app.put('/person/:uuid/relation/relatedPerson', personController.listPersons);
-    app.delete('/person/:uuid/relation/relatedPerson', personController.listPersons);
+    app.get('/person/:uuid/relations/relatedPerson', personRelationController.listPersons);
+    app.put('/person/:uuid/relation/relatedPerson', personRelationController.listPersons);
+    app.delete('/person/:uuid/relation/relatedPerson', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/child', personController.listPersons);
-    app.get('/person/:uuid/relations/child', personController.listPersons);
-    app.delete('/person/:uuid/relations/child', personController.listPersons);
+    app.get('/person/:uuid/relations/child', personRelationController.listPersons);
+    app.put('/person/:uuid/relations/child', personRelationController.listPersons);
+    app.delete('/person/:uuid/relations/child', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/parent', personController.listPersons);
-    app.put('/person/:uuid/relation/parent', personController.listPersons);
-    app.delete('/person/:uuid/relation/parent', personController.listPersons);
+    app.get('/person/:uuid/relations/parent', personRelationController.listPersons);
+    app.put('/person/:uuid/relation/parent', personRelationController.listPersons);
+    app.delete('/person/:uuid/relation/parent', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/engagement', personController.listPersons);
-    app.put('/person/:uuid/relation/engagement', personController.listPersons);
-    app.delete('/person/:uuid/relation/engagement', personController.listPersons);
+    app.get('/person/:uuid/relations/engagement', personRelationController.listPersons);
+    app.put('/person/:uuid/relation/engagement', personRelationController.listPersons);
+    app.delete('/person/:uuid/relation/engagement', personRelationController.listPersons);
 
-    app.get('/person/:uuid/relations/responsibility', personController.listPersons);
-    app.put('/person/:uuid/relation/responsibility', personController.listPersons);
-    app.delete('/person/:uuid/relation/responsibility', personController.listPersons);
-
+    app.get('/person/:uuid/relations/responsibility', personRelationController.listPersons);
+    app.put('/person/:uuid/relation/responsibility', personRelationController.listPersons);
+    app.delete('/person/:uuid/relation/responsibility', personRelationController.listPersons);
 
 
     /**

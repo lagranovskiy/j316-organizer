@@ -26,7 +26,7 @@ var PersonIsMarriedWith = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonIsMarriedWith.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Person,
             relationMap.relations.Person.IS_MARRIED_WITH,

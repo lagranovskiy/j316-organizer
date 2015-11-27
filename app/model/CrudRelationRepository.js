@@ -12,22 +12,36 @@ function CrudRelationRepository() {
 /**
  * Returns a all relations of given type to the given target type from source with given uuid
  *
- * @param entityType entityType
- * @param uuid uuid
+ * @param relation relation
  * @param retValCallback
  */
-CrudRelationRepository.prototype.getRelationByUUID = function (relationType, uuid, retValCallback) {
+CrudRelationRepository.prototype.getRelated = function (relation, retValCallback) {
+    var meta = relation.getMetaInfo();
+    /**
+     *     var meta = {
+                sourceType: sourceType,
+                sourceUUID: sourceUUID,
+                relationType: relationType,
+                targetType: targetType,
+                targetUUID: targetUUID,
+                ignoreDirection: ignoreDirection
+            };
+     */
 
-    console.info('Resolving ' + relationType + ' relation with uuid ' + uuid);
+    console.info('Resolving related relations of type' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') ');
     var query = [
-        'MATCH (source) - [relation:' + relationType + ' {uuid: {uuid}}] -> (target))',
-        'WHERE (source.isDeleted = false OR source.isDeleted IS NULL)',
+        'MATCH (source:' + meta.sourceType + ') - [relation:' + meta.relationType + '] -' + (!meta.ignoreDirection ? '>' : '') + ' (target:' + meta.targetType + '))',
+        'WHERE (relation.isDeleted = false OR relation.isDeleted IS NULL)',
+        'AND (source.isDeleted = false OR source.isDeleted IS NULL)',
         'AND (target.isDeleted = false OR target.isDeleted IS NULL)',
+        'AND (source.uuid = {sourceUUID} OR {sourceUUID} IS NULL)',
+        'AND (target.uuid = {targetUUID} OR {sourceUUID} IS NULL)',
         'RETURN source, relation, target'
     ].join('\n');
 
     var params = {
-        uuid: uuid
+        sourceUUID: meta.sourceUUID,
+        targetUUID: meta.targetUUID
     };
 
     async.waterfall([
@@ -37,61 +51,20 @@ CrudRelationRepository.prototype.getRelationByUUID = function (relationType, uui
         function (results, callback) {
 
             if (!results || results.length != 1) {
-                return callback('Cannot resolve ' + relationType + ' by uuid: ' + uuid + '.');
+                return callback('Cannot resolve  relation ' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') ');
             }
-            console.info('Resolving ' + relationType + ' with uuid ' + uuid + ' completed.');
-
-            var retVal = {
-                source: results[0].source.data,
-                relation: results[0].relation.data,
-                relationType: relationType,
-                target: results[0].target.data
-            };
-
-            return callback(null, retVal);
-        }
-    ], retValCallback);
-};
-
-/**
- * Returns all relations from source to target (undirected) with source uuid = uuid
- * @param sourceType type of source object
- * @param sourceUUID uuid of the source object
- * @param relationType type of relation
- * @param targetType type of target
- * @param retValCallback callback
- */
-CrudRelationRepository.prototype.getRelationBySourceAndType = function (sourceType, sourceUUID, relationType, targetType, retValCallback) {
-    console.info('Listing of all relations of type' + relationType + ' between ' + sourceType + '(uuid:' + sourceUUID + ') and ' + targetType + '.');
-
-    var query = [
-        'MATCH (source:' + sourceType + ' {uuid: {uuid}})-[relation:' + relationType + ']-(target:' + targetType + ')',
-        'WHERE (source.isDeleted = false OR source.isDeleted IS NULL)',
-        'AND (target.isDeleted = false OR target.isDeleted IS NULL)',
-        'RETURN source, relation, target'
-    ].join('\n');
-
-    var params = {
-        uuid: uuid
-    };
-
-
-    async.waterfall([
-        function (callback) {
-            db.query(query, params, callback);
-        },
-        function (results, callback) {
 
             var retVal = [];
             _.each(results, function (relationRs) {
                 retVal.push({
                     source: relationRs.source.data,
                     relation: relationRs.relation.data,
-                    relationType: relationType,
                     target: relationRs.target.data
                 });
             });
-            console.info('Listing of all ' + relationType + ' between ' + sourceType + '(uuid:' + sourceUUID + ') and ' + targetType + ' completed.');
+
+            console.info('Resolving related relations of type' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') completed.');
+
             return callback(null, retVal);
         }
     ], retValCallback);
@@ -101,30 +74,38 @@ CrudRelationRepository.prototype.getRelationBySourceAndType = function (sourceTy
 /**
  * Creates or saves relation between two typed entities identified by uuid with relation data as association
  *
- * @param sourceType the source type
- * @param sourceUUID uuid of source
- * @param relationData relation data of source
- * @param relationType type of relation
- * @param targetType target type
- * @param targetUUID target uuid
+ * @param relation relation definition to be saved
  * @param retValCallback
  */
-CrudRelationRepository.prototype.saveRelation = function (sourceType, sourceUUID, relationType, relationData, targetType, targetUUID, retValCallback) {
-    console.info('Saving relation of type' + relationType + ' between ' + sourceType + '(uuid:' + sourceUUID + ') and ' + targetType + '.');
+CrudRelationRepository.prototype.saveRelation = function (relation, retValCallback) {
+    var meta = relation.getMetaInfo();
+    /**
+     *     var meta = {
+                sourceType: sourceType,
+                sourceUUID: sourceUUID,
+                relationType: relationType,
+                targetType: targetType,
+                targetUUID: targetUUID,
+                ignoreDirection: ignoreDirection
+            };
+     */
+    console.info('Saving relation of relation' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ')');
 
-    entityData.isDeleted = false;
-    entityData = _.omit(entityData, 'extra');
+    relation.isDeleted = false;
 
     var query = [
-        'MERGE (entity:' + entityType + '{uuid:{uuid}})',
-        'ON MATCH SET entity={entityData}, entity.lastSeen = timestamp()',
-        'ON CREATE SET entity={entityData}, entity.created = timestamp(), entity.lastSeen = timestamp()',
-        'RETURN entity'
+        'MATCH (source:' + meta.sourceType + '{uuid:{sourceUUID}}), (target:' + meta.targetType + '{uuid:{targetUUID}}), ',
+        'MERGE (source)-[relation:' + meta.relationType + '{uuid:{relationUUID}})]-' + (!meta.ignoreDirection ? '>' : '') + '(target)',
+        'ON MATCH SET relation={relationData}, relation.lastSeen = timestamp()',
+        'ON CREATE SET relation={relationData}, relation.created = timestamp(), relation.lastSeen = timestamp()',
+        'RETURN source, relation, target'
     ].join('\n');
 
     var param = {
-        uuid: entityData.uuid,
-        entityData: entityData
+        sourceUUID: meta.sourceUUID,
+        targetUUID: meta.targetUUID,
+        relationUUID: relation.uuid,
+        relationData: relation
     };
 
     async.waterfall([
@@ -134,36 +115,55 @@ CrudRelationRepository.prototype.saveRelation = function (sourceType, sourceUUID
         function (entityDataArray, callback) {
 
             if (!entityDataArray || entityDataArray.length != 1) {
-                return callback('Cannot update entity. Unknown problem happened.');
+                return callback('Cannot update relation. Unknown problem happened.');
             }
-            console.info('Saving of ' + entityType + ' with uuid ' + entityData.uuid + ' completed.');
-            return callback(null, entityDataArray[0].entity.data);
+            console.info('Saving of relation' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ') completed');
+
+            return callback(null, {
+                source: entityDataArray[0].source.data,
+                relation: entityDataArray[0].relation.data,
+                target: entityDataArray[0].target.data
+            });
         }
     ], retValCallback);
 };
 
 
 /**
- * Deletes Entity. Marks it as deleted
- * @param entityType entityType
- * @param uuid uuid
+ * Deletes relation. Marks it as deleted
+ * @param relation relation definition to be removed. relation uuid is mandatory
  * @param retValCallback
  */
-CrudRelationRepository.prototype.deleteEntity = function (entityType, uuid, retValCallback) {
-    console.info('Deleting of ' + entityType + ' with uuid ' + uuid);
-    if (!uuid) {
-        return callback('Cannot update entity. Invalid args.');
+CrudRelationRepository.prototype.deleteRelation = function (relation, retValCallback) {
+
+    var meta = relation.getMetaInfo();
+    /**
+     *     var meta = {
+                sourceType: sourceType,
+                sourceUUID: sourceUUID,
+                relationType: relationType,
+                targetType: targetType,
+                targetUUID: targetUUID,
+                ignoreDirection: ignoreDirection
+            };
+     */
+
+
+    console.info('Deleting relation' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ') completed');
+
+    if (!relation.uuid) {
+        return retValCallback('Cannot delete entity. Invalid args.');
     }
 
     var query = [
-        'MATCH (entity:' + entityType + '{ uuid:{uuid}})',
-        'WHERE entity.isDeleted=false OR entity.isDeleted IS NULL',
+        'MATCH (source:' + meta.sourceType + ')-[relation:' + meta.relationType + '{uuid:{relationUUID}}]-' + (!meta.ignoreDirection ? '>' : '') + '(target:' + meta.targetType + '), ',
+        'WHERE relation.isDeleted=false OR relation.isDeleted IS NULL',
         'SET entity.isDeleted=true, entity.deleted=timestamp()',
-        'RETURN entity'
+        'RETURN source, relation, target'
     ].join('\n');
 
     var params = {
-        uuid: uuid
+        relationUUID: relation.uuid
     };
 
     async.waterfall([function (callback) {
@@ -171,15 +171,19 @@ CrudRelationRepository.prototype.deleteEntity = function (entityType, uuid, retV
     }, function (entityData, callback) {
 
         if (!entityData || entityData.length != 1) {
-            return callback('Cannot delete ' + entityType + ' with uuid ' + uuid + ' . Not found');
+            return callback('Cannot delete ' + meta.relationType + ' with uuid ' + relation.uuid + ' . Not found');
         }
 
-        callback(null, entityType + ' with uuid ' + uuid + ' removed.');
+        callback(null, {
+            source: entityData[0].source.data,
+            relation: entityData[0].relation.data,
+            target: entityData[0].target.data
+        });
     }], function (err, info) {
         if (err) {
-            return retValCallback('Cannot delete ' + entityType + ' with uuid ' + uuid + ' : ' + err);
+            return retValCallback(err);
         }
-        console.info('Deleting of ' + entityType + ' with uuid ' + uuid + 'completed.');
+        console.info('Deleting of ' + meta.relationType + ' with uuid ' + relation.uuid + ' completed.');
         return retValCallback(null, info);
 
     });

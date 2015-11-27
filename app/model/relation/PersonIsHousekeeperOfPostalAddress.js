@@ -25,7 +25,7 @@ var PersonIsHousekeeperOfPostalAddress = function (personUUID, relationData, ref
     }
 
     return extend(PersonIsHousekeeperOfPostalAddress.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Person,
             relationMap.relations.Person.HOUSEKEEPER_OF,

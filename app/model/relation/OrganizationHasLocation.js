@@ -27,7 +27,7 @@ var OrganizationHasLocation = function (organizationUUID, relationData, ref) {
     }
 
     return extend(OrganizationHasLocation.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Organization,
             relationMap.relations.Organization.HAS_LOCATION,

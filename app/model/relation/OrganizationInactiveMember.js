@@ -27,7 +27,7 @@ var OrganizationInactiveMember = function (organizationUUID, relationData, ref) 
     }
 
     return extend(OrganizationInactiveMember.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Organization,
             relationMap.relations.Organization.HAS_INACTIVE_MEMBER,

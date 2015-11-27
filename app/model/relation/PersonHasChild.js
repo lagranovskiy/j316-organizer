@@ -25,7 +25,7 @@ var PersonHasChild = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonHasChild.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Person,
             relationMap.relations.Person.HAS_CHILD,

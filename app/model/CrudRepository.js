@@ -127,7 +127,7 @@ CrudRepository.prototype.saveEntity = function (entityType, entityData, retValCa
 CrudRepository.prototype.deleteEntity = function (entityType, uuid, retValCallback) {
     console.info('Deleting of ' + entityType + ' with uuid ' + uuid);
     if (!uuid) {
-        return callback('Cannot update entity. Invalid args.');
+        return retValCallback('Cannot update entity. Invalid args.');
     }
 
     var query = [

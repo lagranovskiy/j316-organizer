@@ -27,7 +27,7 @@ var PersonIsRelatedTo = function (personUUID, relationData, ref) {
     }
 
     return extend(PersonIsRelatedTo.super_(
-            relationData.uuid,
+            data,
             ref,
             relationMap.objects.Person,
             relationMap.relations.Person.IS_RELATED_TO,

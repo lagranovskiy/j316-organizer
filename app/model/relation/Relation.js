@@ -12,7 +12,7 @@
  * @returns {{relationUUID, ref, getMetaInfo: Function}}
  * @constructor
  */
-function Relation(relationUUID, ref, sourceType, relationType, targetType, sourceUUID, targetUUID, ignoreDirection) {
+function Relation(data, ref, sourceType, relationType, targetType, sourceUUID, targetUUID, ignoreDirection) {
 
 
     return {
@@ -21,14 +21,29 @@ function Relation(relationUUID, ref, sourceType, relationType, targetType, sourc
          * Returns a unique identifier of the relation
          */
         get relationUUID() {
-            return relationUUID;
+            return data.relationUUID;
         },
 
         /**
          * Returns the reference of the relation as a entity
          */
         get ref() {
-            return ref;
+            return !ref ? {} : ref;
+        },
+
+        /**
+         * Returns the date as a relation first deleted
+         */
+        get deleted() {
+            return !data.deleted ? null : data.deleted;
+        },
+
+        /**
+         * Indicates if relation is marked as deleted
+         * @returns {*|boolean}
+         */
+        get isDeleted() {
+            return !data.isDeleted ? false : data.isDeleted;
         },
 
         /**
