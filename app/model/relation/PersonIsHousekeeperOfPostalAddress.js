@@ -32,7 +32,8 @@ var PersonIsHousekeeperOfPostalAddress = function (personUUID, relationData, ref
             relationMap.objects.PostalAddress,
             personUUID,
             null,
-            false),
+            false,
+            true),
         {
 
             // Nothing defined yet

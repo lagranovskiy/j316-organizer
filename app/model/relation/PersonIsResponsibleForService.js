@@ -33,7 +33,8 @@ var PersonIsResponsibleForService = function (personUUID, relationData, ref) {
             relationMap.objects.Service,
             personUUID,
             null,
-            false
+            false,
+            true
         ),
         {
 

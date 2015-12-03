@@ -17,16 +17,6 @@ function CrudRelationRepository() {
  */
 CrudRelationRepository.prototype.getRelated = function (relation, retValCallback) {
     var meta = relation.getMetaInfo();
-    /**
-     *     var meta = {
-                sourceType: sourceType,
-                sourceUUID: sourceUUID,
-                relationType: relationType,
-                targetType: targetType,
-                targetUUID: targetUUID,
-                ignoreDirection: ignoreDirection
-            };
-     */
 
     console.info('Resolving related relations of type' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') ');
     var query = [

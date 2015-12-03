@@ -32,6 +32,7 @@ var ServiceParticipatedPerson = function (serviceUUID, relationData, ref) {
             relationMap.objects.Service,
             null,
             serviceUUID,
+            false,
             false),
         {
 

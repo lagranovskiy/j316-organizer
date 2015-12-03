@@ -34,7 +34,8 @@ var OrganizationActiveMember = function (organizationUUID, relationData, ref) {
             relationMap.objects.Person,
             organizationUUID,
             null,
-            false),
+            false,
+            true),
         {
 
             /**

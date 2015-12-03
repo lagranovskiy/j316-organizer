@@ -9,7 +9,7 @@ var _ = require('underscore');
  * Controller to provide Organization crud functionality
  * @constructor
  */
-var ServiceController = function () {
+var OrganizationController = function () {
 
     var controller = {
 
@@ -142,4 +142,4 @@ var ServiceController = function () {
 
     return controller;
 };
-module.exports = new ServiceController();
+module.exports = new OrganizationController();

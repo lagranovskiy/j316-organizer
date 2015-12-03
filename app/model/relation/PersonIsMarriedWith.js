@@ -33,6 +33,7 @@ var PersonIsMarriedWith = function (personUUID, relationData, ref) {
             relationMap.objects.Person,
             personUUID,
             null,
+            true,
             true),
         {
 

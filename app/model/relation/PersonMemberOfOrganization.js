@@ -33,6 +33,7 @@ var PersonMemberOfOrganization = function (personUUID, relationData, ref) {
             relationMap.objects.Person,
             null,
             personUUID,
+            false,
             false),
         {
 

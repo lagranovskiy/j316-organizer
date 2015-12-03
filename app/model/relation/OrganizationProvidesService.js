@@ -34,7 +34,8 @@ var OrganizationProvidesService = function (organizationUUID, relationData, ref)
             relationMap.objects.Service,
             organizationUUID,
             null,
-            false),
+            false,
+            true),
         {
 
             // Nothing defined yet

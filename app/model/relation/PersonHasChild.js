@@ -32,7 +32,8 @@ var PersonHasChild = function (personUUID, relationData, ref) {
             relationMap.objects.Person,
             personUUID,
             null,
-            false),
+            false,
+            true),
         {
 
             // Nothing defined yet

@@ -34,7 +34,8 @@ var OrganizationHasLocation = function (organizationUUID, relationData, ref) {
             relationMap.objects.PostalAddress,
             organizationUUID,
             null,
-            false),
+            false,
+            true),
         {
 
             // Nothing to define yet

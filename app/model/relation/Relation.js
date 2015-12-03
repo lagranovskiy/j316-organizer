@@ -9,10 +9,11 @@
  * @param sourceUUID uuid of the source or 'null'
  * @param targetUUID uuid of the target or 'null'
  * @param ignoreDirection if true, the direction is not defined
+ * @param referenceTargetType if true, then ref is filled with entity = target type, if false with source type
  * @returns {{relationUUID, ref, getMetaInfo: Function}}
  * @constructor
  */
-function Relation(data, ref, sourceType, relationType, targetType, sourceUUID, targetUUID, ignoreDirection) {
+function Relation(data, ref, sourceType, relationType, targetType, sourceUUID, targetUUID, ignoreDirection, referenceTargetType) {
 
 
     return {
@@ -58,7 +59,8 @@ function Relation(data, ref, sourceType, relationType, targetType, sourceUUID, t
                 relationType: relationType,
                 targetType: targetType,
                 targetUUID: targetUUID,
-                ignoreDirection: ignoreDirection
+                ignoreDirection: ignoreDirection,
+                referenceTargetType: referenceTargetType
             };
 
             return meta;

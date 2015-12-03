@@ -32,7 +32,8 @@ var PersonParticipateInService = function (personUUID, relationData, ref) {
             relationMap.objects.Service,
             personUUID,
             null,
-            false),
+            false,
+            true),
         {
 
             /**
