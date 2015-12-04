@@ -58,7 +58,7 @@ function Relation(data, ref, sourceType, relationType, targetType, sourceUUID, t
                 sourceUUID: sourceUUID,
                 relationType: relationType,
                 targetType: targetType,
-                targetUUID: targetUUID,
+                targetUUID: targetUUID == null && ref != null ? ref.uuid : targetUUID,
                 ignoreDirection: ignoreDirection,
                 referenceTargetType: referenceTargetType
             };

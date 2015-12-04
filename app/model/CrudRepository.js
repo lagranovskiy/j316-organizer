@@ -132,8 +132,10 @@ CrudRepository.prototype.deleteEntity = function (entityType, uuid, retValCallba
 
     var query = [
         'MATCH (entity:' + entityType + '{ uuid:{uuid}})',
+        'OPTIONAL MATCH (entity)-[relation]-()',
         'WHERE entity.isDeleted=false OR entity.isDeleted IS NULL',
         'SET entity.isDeleted=true, entity.deleted=timestamp()',
+        'SET relation.isDeleted=true, relation.deleted=timestamp()',
         'RETURN entity'
     ].join('\n');
 

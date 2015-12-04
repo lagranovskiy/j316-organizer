@@ -1,9 +1,8 @@
 var util = require('util'),
     Relation = require('./Relation'),
-    urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
 
-var relationMap = require('../../config/relationMap');
+var relationMap = require('../../../config/relationMap');
 
 /**
  * Relation (Person)-[IS_RESPONSIBLE_FOR]->(Service)

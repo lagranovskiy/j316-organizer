@@ -30,8 +30,7 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
     ].join('\n');
 
     var params = {
-        sourceUUID: meta.sourceUUID,
-        targetUUID: meta.targetUUID
+        sourceUUID: meta.sourceUUID
     };
 
     async.waterfall([
@@ -39,10 +38,6 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
             db.query(query, params, callback);
         },
         function (results, callback) {
-
-            if (!results || results.length != 1) {
-                return callback('Cannot resolve  relation ' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') ');
-            }
 
             var retVal = [];
             _.each(results, function (relationRs) {
@@ -53,7 +48,7 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
                 });
             });
 
-            console.info('Resolving related relations of type' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') completed.');
+            console.info('Resolving relations of type ' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') completed.');
 
             return callback(null, retVal);
         }
@@ -69,17 +64,8 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
  */
 CrudRelationRepository.prototype.saveRelation = function (relation, retValCallback) {
     var meta = relation.getMetaInfo();
-    /**
-     *     var meta = {
-                sourceType: sourceType,
-                sourceUUID: sourceUUID,
-                relationType: relationType,
-                targetType: targetType,
-                targetUUID: targetUUID,
-                ignoreDirection: ignoreDirection
-            };
-     */
-    console.info('Saving relation of relation' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ')');
+
+    console.info('Saving relation of relation ' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ')');
 
     relation.isDeleted = false;
 
@@ -94,7 +80,7 @@ CrudRelationRepository.prototype.saveRelation = function (relation, retValCallba
     var param = {
         sourceUUID: meta.sourceUUID,
         targetUUID: meta.targetUUID,
-        relationUUID: relation.uuid,
+        relationUUID: relation.relationUUID,
         relationData: relation
     };
 
@@ -107,7 +93,7 @@ CrudRelationRepository.prototype.saveRelation = function (relation, retValCallba
             if (!entityDataArray || entityDataArray.length != 1) {
                 return callback('Cannot update relation. Unknown problem happened.');
             }
-            console.info('Saving of relation' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ') completed');
+            console.info('Saving of relation ' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ') completed');
 
             return callback(null, {
                 source: entityDataArray[0].source.data,
@@ -127,21 +113,10 @@ CrudRelationRepository.prototype.saveRelation = function (relation, retValCallba
 CrudRelationRepository.prototype.deleteRelation = function (relation, retValCallback) {
 
     var meta = relation.getMetaInfo();
-    /**
-     *     var meta = {
-                sourceType: sourceType,
-                sourceUUID: sourceUUID,
-                relationType: relationType,
-                targetType: targetType,
-                targetUUID: targetUUID,
-                ignoreDirection: ignoreDirection
-            };
-     */
 
+    console.info('Deleting relation ' + meta.relationType + ' (' + relation.relationUUID + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ') completed');
 
-    console.info('Deleting relation' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ') completed');
-
-    if (!relation.uuid) {
+    if (!relation.relationUUID) {
         return retValCallback('Cannot delete entity. Invalid args.');
     }
 
@@ -153,7 +128,7 @@ CrudRelationRepository.prototype.deleteRelation = function (relation, retValCall
     ].join('\n');
 
     var params = {
-        relationUUID: relation.uuid
+        relationUUID: relation.relationUUID
     };
 
     async.waterfall([function (callback) {

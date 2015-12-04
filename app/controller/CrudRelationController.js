@@ -36,6 +36,7 @@ var CrudRelationControllerFactory = {
                         return next('Error. UUID of relation source is empty');
                     }
 
+                    console.info('Resolving relations of type ' + relationType + ' of uuid: ' + relationSourceUUID);
                     var relation = new RelationWrapper(relationSourceUUID);
 
                     var referenceTargetType = relation.getMetaInfo().referenceTargetType;
@@ -75,6 +76,13 @@ var CrudRelationControllerFactory = {
 
                 },
 
+                /**
+                 * Process relation saving
+                 * @param req request
+                 * @param res response
+                 * @param next callback
+                 * @returns {*}
+                 */
                 saveRelation: function (req, res, next) {
                     var relationSourceUUID = req.params.uuid;
 
@@ -83,114 +91,108 @@ var CrudRelationControllerFactory = {
                     }
 
                     var relationWrapperData = req.body;
-
                     if (!relationWrapperData) {
                         return next('Error. No ' + relationType + '. data is empty');
                     }
-
                     if (!relationWrapperData.ref) {
                         return next('Error. No ' + relationType + ' target set. Cannot save/create relation.');
                     }
-
-
+                    console.info('Saving ' + relationType + ' with source uuid: ' + relationSourceUUID);
 
                     var relRef = relationWrapperData.ref;
-                    var relData = _.omit(relationWrapperData, ['ref', 'relationUUID', 'deleted', 'isDeleted']);
+                    var relData = _.omit(relationWrapperData, ['ref', 'deleted', 'isDeleted']);
                     var relSourceID = relationSourceUUID;
 
+                    if (!relData.relationUUID) {
+                        relData.relationUUID = uuid.v1();
+                        console.info('Creating a new ' + relationType + ' with uuid: ' + relData.relationUUID);
+                    } else {
+                        console.info('Saving ' + relationType + ' with uuid: ' + relData.relationUUID);
+                    }
 
                     var relation = new RelationWrapper(relSourceID, relData, relRef);
+                    var referenceTargetType = relation.getMetaInfo().referenceTargetType;
 
+                    async.waterfall([
+                        function (callback) {
+                            crudRelationRepository.saveRelation(relation, callback);
+                        },
+                        function (savedRelation, callback) {
 
-                    if (!entityData.uuid) {
-                        entityData.uuid = uuid.v1();
-                        console.info('Creating a new ' + entityType + ' with uuid: ' + entityData.uuid);
-                    } else {
-                        console.info('Saving ' + entityType + ' with uuid: ' + entityData.uuid);
-                    }
-                    /**
-                     * referenceTargetType = true means that the target of relation is a ref of the wrapper, else the source is the ref
-                     */
+                            // rotate relation response if needed by the relation definition
+                            var relRef = savedRelation.target;
+                            var relSourceUUID = savedRelation.source.uuid;
+                            if (referenceTargetType === false) {
+                                relRef = savedRelation.source;
+                                relSourceUUID = savedRelation.target.uuid;
+                            }
+
+                            var savedRelationWrapper = new RelationWrapper(relSourceUUID, savedRelation.relation, relRef);
+
+                            callback(null, savedRelationWrapper);
+                        }
+                    ], function (err, retVal) {
+                        if (err) {
+                            console.error('Cannot save ' + relation.getMetaInfo().relationType + '. ' + err);
+                            return next(err);
+                        }
+                        console.info('Request for saving of ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ' + retVal.length + ' relations saved');
+                        next(null, retVal);
+                    });
 
                 },
 
 
+
                 /**
-                 * Saves given entity
+                 * Removes existing Relation by given relationUUID
                  *
-                 * @param req request
-                 * @param res response
-                 * @param next next callback
-                 */
-                /**  saveRelation: function (req, res, next) {
-
-                    var entityData = req.body;
-
-                    if (!entityData) {
-                        return next('Error. No ' + entityType + ' data is empty');
-                    }
-
-
-                    if (!entityData.uuid) {
-                        entityData.uuid = uuid.v1();
-                        console.info('Creating a new ' + entityType + ' with uuid: ' + entityData.uuid);
-                    } else {
-                        console.info('Saving ' + entityType + ' with uuid: ' + entityData.uuid);
-                    }
-
-                    var entityWrapper = new EntityWrapper(entityData);
-
-
-                    var handleValidatedEntity = function (err, validatedEntityWrapper) {
-                        if (err) {
-                            return next(err);
-                        }
-                        console.info(entityType + ' with uuid: ' + validatedEntityWrapper.uuid + ' is validated successfully. Continue with saving.');
-
-                        crudRepository.saveEntity(entityType, validatedEntityWrapper, function (err, data) {
-                            if (err) {
-                                return next(err);
-                            }
-
-                            var savedEntityWrapper = new EntityWrapper(data);
-                            return res.send(savedEntityWrapper);
-
-                        });
-                    };
-
-
-                    if (!entityWrapper.validate) {
-                        console.error('Skipping validation of entity type ' + entityType + ' no validator method (validate()) defined.');
-                        handleValidatedEntity(null, entityWrapper);
-                    } else {
-                        entityWrapper.validate(handleValidatedEntity);
-                    }
-
-
-                }*/
-                ,
-
-                /**
-                 * Removes existing Organization
                  * @param req
                  * @param res
                  * @param next
                  */
                 deleteRelation: function (req, res, next) {
-                    var entityUUID = req.params.uuid;
+                    var relationSourceUUID = req.params.uuid;
+                    var relationUUID = req.params.relationUUID;
 
-                    if (!entityUUID) {
-                        return next('Error by deleting entity of type ' + entityType + '. uuid is empty or not set.');
+                    if (!relationSourceUUID) {
+                        return next('Error. UUID of relation source is empty');
                     }
 
-                    console.info('Deleting ' + entityType + ' with uuid: ' + entityUUID);
+                    if (!relationUUID) {
+                        return next('Error. UUID of relation is empty');
+                    }
 
-                    crudRepository.deleteEntity(entityType, entityUUID, function (err, result) {
+                    console.info('Deleting ' + relationType + ' with uuid: ' + relationUUID);
+
+                    var relation = new RelationWrapper(relationSourceUUID, {relationUUID:relationUUID});
+                    var referenceTargetType = relation.getMetaInfo().referenceTargetType;
+
+                    async.waterfall([
+                        function (callback) {
+                            crudRelationRepository.deleteRelation(relation, callback);
+                        },
+                        function (deletedRelation, callback) {
+
+                            // rotate relation response if needed by the relation definition
+                            var relRef = deletedRelation.target;
+                            var relSourceUUID = deletedRelation.source.uuid;
+                            if (referenceTargetType === false) {
+                                relRef = deletedRelation.source;
+                                relSourceUUID = deletedRelation.target.uuid;
+                            }
+
+                            var deletedRelationWrapper = new RelationWrapper(relSourceUUID, deletedRelation.relation, relRef);
+
+                            callback(null, deletedRelationWrapper);
+                        }
+                    ], function (err, retVal) {
                         if (err) {
+                            console.error('Cannot delete relation ' + relation.getMetaInfo().relationType + '. ' + err);
                             return next(err);
                         }
-
-                        return res.send(result);
+                        console.info('Request for delete of relation ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ' + retVal.length + ' relations deleted');
+                        next(null, retVal);
                     });
                 }
             };

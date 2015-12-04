@@ -1,8 +1,7 @@
 var util = require('util'),
     Relation = require('./Relation'),
-    urlMap = require('../../config/urlMap'),
     extend = require('object-extend');
-var relationMap = require('../../config/relationMap');
+var relationMap = require('../../../config/relationMap');
 
 
 /**
