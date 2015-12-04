@@ -20,12 +20,11 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
 
     console.info('Resolving related relations of type' + meta.relationType + ' between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ') ');
     var query = [
-        'MATCH (source:' + meta.sourceType + ') - [relation:' + meta.relationType + '] -' + (!meta.ignoreDirection ? '>' : '') + ' (target:' + meta.targetType + '))',
+        'MATCH (source:' + meta.sourceType + ') - [relation:' + meta.relationType + '] -' + (!meta.ignoreDirection ? '>' : '') + ' (target:' + meta.targetType + ')',
         'WHERE (relation.isDeleted = false OR relation.isDeleted IS NULL)',
         'AND (source.isDeleted = false OR source.isDeleted IS NULL)',
         'AND (target.isDeleted = false OR target.isDeleted IS NULL)',
         'AND (source.uuid = {sourceUUID} OR {sourceUUID} IS NULL)',
-        'AND (target.uuid = {targetUUID} OR {sourceUUID} IS NULL)',
         'RETURN source, relation, target'
     ].join('\n');
 
@@ -70,8 +69,8 @@ CrudRelationRepository.prototype.saveRelation = function (relation, retValCallba
     relation.isDeleted = false;
 
     var query = [
-        'MATCH (source:' + meta.sourceType + '{uuid:{sourceUUID}}), (target:' + meta.targetType + '{uuid:{targetUUID}}), ',
-        'MERGE (source)-[relation:' + meta.relationType + '{uuid:{relationUUID}})]-' + (!meta.ignoreDirection ? '>' : '') + '(target)',
+        'MATCH (source:' + meta.sourceType + '{uuid:{sourceUUID}}), (target:' + meta.targetType + '{uuid:{targetUUID}}) ',
+        'MERGE (source)-[relation:' + meta.relationType + '{relationUUID:{relationUUID}}]-' + (!meta.ignoreDirection ? '>' : '') + '(target)',
         'ON MATCH SET relation={relationData}, relation.lastSeen = timestamp()',
         'ON CREATE SET relation={relationData}, relation.created = timestamp(), relation.lastSeen = timestamp()',
         'RETURN source, relation, target'
@@ -81,7 +80,7 @@ CrudRelationRepository.prototype.saveRelation = function (relation, retValCallba
         sourceUUID: meta.sourceUUID,
         targetUUID: meta.targetUUID,
         relationUUID: relation.relationUUID,
-        relationData: relation
+        relationData: _.omit(relation,['ref','metaInfo'])
     };
 
     async.waterfall([
@@ -121,9 +120,9 @@ CrudRelationRepository.prototype.deleteRelation = function (relation, retValCall
     }
 
     var query = [
-        'MATCH (source:' + meta.sourceType + ')-[relation:' + meta.relationType + '{uuid:{relationUUID}}]-' + (!meta.ignoreDirection ? '>' : '') + '(target:' + meta.targetType + '), ',
+        'MATCH (source:' + meta.sourceType + ')-[relation:' + meta.relationType + '{relationUUID:{relationUUID}}]-' + (!meta.ignoreDirection ? '>' : '') + '(target:' + meta.targetType + ') ',
         'WHERE relation.isDeleted=false OR relation.isDeleted IS NULL',
-        'SET entity.isDeleted=true, entity.deleted=timestamp()',
+        'SET relation.isDeleted=true, relation.deleted=timestamp()',
         'RETURN source, relation, target'
     ].join('\n');
 
@@ -136,19 +135,20 @@ CrudRelationRepository.prototype.deleteRelation = function (relation, retValCall
     }, function (entityData, callback) {
 
         if (!entityData || entityData.length != 1) {
-            return callback('Cannot delete ' + meta.relationType + ' with uuid ' + relation.uuid + ' . Not found');
+            return callback('Cannot delete ' + meta.relationType + ' with uuid ' + relation.relationUUID + ' . Not found');
         }
 
         callback(null, {
             source: entityData[0].source.data,
             relation: entityData[0].relation.data,
-            target: entityData[0].target.data
+            target: entityData[0].target.data,
+            deleted: true
         });
     }], function (err, info) {
         if (err) {
             return retValCallback(err);
         }
-        console.info('Deleting of ' + meta.relationType + ' with uuid ' + relation.uuid + ' completed.');
+        console.info('Deleting of ' + meta.relationType + ' with uuid ' + relation.relationUUID + ' completed.');
         return retValCallback(null, info);
 
     });

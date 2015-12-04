@@ -1,4 +1,6 @@
 var uuid = require('node-uuid');
+var _=require('underscore');
+var async=require('neo-async');
 var relationMap = require('../../config/relationMap');
 var CrudRelationRepository = require('../model/CrudRelationRepository');
 var crudRelationRepository = new CrudRelationRepository();
@@ -104,7 +106,7 @@ var CrudRelationControllerFactory = {
                     var relSourceID = relationSourceUUID;
 
                     if (!relData.relationUUID) {
-                        relData.relationUUID = uuid.v1();
+                        relData.relationUUID = uuid.v4();
                         console.info('Creating a new ' + relationType + ' with uuid: ' + relData.relationUUID);
                     } else {
                         console.info('Saving ' + relationType + ' with uuid: ' + relData.relationUUID);

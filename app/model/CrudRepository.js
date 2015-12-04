@@ -18,7 +18,7 @@ function CrudRepository() {
  */
 CrudRepository.prototype.getEntity = function (entityType, uuid, retValCallback) {
 
-    console.info('Resolving ' + entityType + ' with uuid ' + uuid);
+    console.info('Repository: Resolving ' + entityType + ' with uuid ' + uuid);
     var query = [
         'MATCH (entity:' + entityType + '{uuid: {uuid}})',
         'WHERE entity.isDeleted = false OR entity.isDeleted IS NULL',
@@ -39,7 +39,7 @@ CrudRepository.prototype.getEntity = function (entityType, uuid, retValCallback)
             if (!results || results.length != 1) {
                 return callback('Cannot resolve ' + entityType + ' by uuid: ' + uuid + '.');
             }
-            console.info('Resolving ' + entityType + ' with uuid ' + uuid + ' completed.');
+            console.info('Repository: Resolving ' + entityType + ' with uuid ' + uuid + ' completed.');
             return callback(null, results[0].entity.data);
         }
     ], retValCallback);
@@ -52,7 +52,7 @@ CrudRepository.prototype.getEntity = function (entityType, uuid, retValCallback)
  * @returns {*}
  */
 CrudRepository.prototype.listEntity = function (entityType, retValCallback) {
-    console.info('Listing of all ' + entityType + '.');
+    console.info('Repository: Listing of all ' + entityType + '.');
     var query = [
         'MATCH (entity:' + entityType + ')',
         'WHERE entity.isDeleted = false OR entity.isDeleted IS NULL',
@@ -70,7 +70,7 @@ CrudRepository.prototype.listEntity = function (entityType, retValCallback) {
             _.each(results, function (entitiyRs) {
                 retVal.push(entitiyRs.entity.data);
             });
-            console.info('Listing of all ' + entityType + ' completed.');
+            console.info('Repository: Listing of all ' + entityType + ' completed.');
             return callback(null, retVal);
         }
     ], retValCallback);
@@ -86,7 +86,7 @@ CrudRepository.prototype.listEntity = function (entityType, retValCallback) {
  * @returns {*}
  */
 CrudRepository.prototype.saveEntity = function (entityType, entityData, retValCallback) {
-    console.info('Saving of ' + entityType + ' with uuid ' + entityData.uuid);
+    console.info('Repository: Saving of ' + entityType + ' with uuid ' + entityData.uuid);
     entityData.isDeleted = false;
     entityData = _.omit(entityData, 'extra');
 
@@ -111,7 +111,7 @@ CrudRepository.prototype.saveEntity = function (entityType, entityData, retValCa
             if (!entityDataArray || entityDataArray.length != 1) {
                 return callback('Cannot update entity. Unknown problem happened.');
             }
-            console.info('Saving of ' + entityType + ' with uuid ' + entityData.uuid + ' completed.');
+            console.info('Repository: Saving of ' + entityType + ' with uuid ' + entityData.uuid + ' completed.');
             return callback(null, entityDataArray[0].entity.data);
         }
     ], retValCallback);
@@ -125,7 +125,7 @@ CrudRepository.prototype.saveEntity = function (entityType, entityData, retValCa
  * @param retValCallback
  */
 CrudRepository.prototype.deleteEntity = function (entityType, uuid, retValCallback) {
-    console.info('Deleting of ' + entityType + ' with uuid ' + uuid);
+    console.info('Repository: Deleting of ' + entityType + ' with uuid ' + uuid);
     if (!uuid) {
         return retValCallback('Cannot update entity. Invalid args.');
     }
@@ -148,15 +148,15 @@ CrudRepository.prototype.deleteEntity = function (entityType, uuid, retValCallba
     }, function (entityData, callback) {
 
         if (!entityData || entityData.length != 1) {
-            return callback('Cannot delete ' + entityType + ' with uuid ' + uuid + ' . Not found');
+            return callback('Cannot delete ' + entityType + ' with uuid ' + uuid + '. Not found');
         }
 
-        callback(null, entityType + ' with uuid ' + uuid + ' removed.');
+        callback(null, {uuid: uuid, deleted: true});
     }], function (err, info) {
         if (err) {
             return retValCallback('Cannot delete ' + entityType + ' with uuid ' + uuid + ' : ' + err);
         }
-        console.info('Deleting of ' + entityType + ' with uuid ' + uuid + 'completed.');
+        console.info('Repository: Deleting of ' + entityType + ' with uuid ' + uuid + ' completed.');
         return retValCallback(null, info);
 
     });

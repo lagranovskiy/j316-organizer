@@ -1,6 +1,7 @@
 var uuid = require('node-uuid');
 var relationMap = require('../../config/relationMap');
 var CrudRepository = require('../model/CrudRepository');
+var _ = require('underscore');
 var crudRepository = new CrudRepository();
 
 /**
@@ -96,7 +97,7 @@ var CrudControllerFactory = {
 
 
                 if (!entityData.uuid) {
-                    entityData.uuid = uuid.v1();
+                    entityData.uuid = uuid.v4();
                     console.info('Creating a new ' + entityType + ' with uuid: ' + entityData.uuid);
                 } else {
                     console.info('Saving ' + entityType + ' with uuid: ' + entityData.uuid);
