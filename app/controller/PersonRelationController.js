@@ -36,8 +36,7 @@ var PersonRelationController = function () {
 
         },
 
-
-        /**
+    /**
          * Resolves children of the given person
          * @param req
          * @param res
