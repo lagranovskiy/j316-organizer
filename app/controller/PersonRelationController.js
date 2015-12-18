@@ -63,7 +63,7 @@ var PersonRelationController = function () {
                         retVal.push(new PersonHasChild(relationDef.source.uuid, relationDef.relation, relationDef.target))
                     });
 
-                    callback(null, retVal);
+                    return callback(null, retVal);
                 }
             ], function (err, retVal) {
                 if (err) {
@@ -75,7 +75,7 @@ var PersonRelationController = function () {
             });
 
 
-            next.send('Not ready yet.');
+            return next.send('Not ready yet.');
         },
 
 

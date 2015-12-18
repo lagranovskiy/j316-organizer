@@ -1,6 +1,6 @@
 var uuid = require('node-uuid');
-var _=require('underscore');
-var async=require('neo-async');
+var _ = require('underscore');
+var async = require('neo-async');
 var relationMap = require('../../config/relationMap');
 var CrudRelationRepository = require('../model/CrudRelationRepository');
 var crudRelationRepository = new CrudRelationRepository();
@@ -65,7 +65,7 @@ var CrudRelationControllerFactory = {
                                 retVal.push(new RelationWrapper(relSourceUUID, relationDef.relation, relRef))
                             });
 
-                            callback(null, retVal);
+                            return callback(null, retVal);
                         }
                     ], function (err, retVal) {
                         if (err) {
@@ -131,7 +131,7 @@ var CrudRelationControllerFactory = {
 
                             var savedRelationWrapper = new RelationWrapper(relSourceUUID, savedRelation.relation, relRef);
 
-                            callback(null, savedRelationWrapper);
+                            return callback(null, savedRelationWrapper);
                         }
                     ], function (err, retVal) {
                         if (err) {
@@ -143,7 +143,6 @@ var CrudRelationControllerFactory = {
                     });
 
                 },
-
 
 
                 /**
@@ -167,7 +166,7 @@ var CrudRelationControllerFactory = {
 
                     console.info('Deleting ' + relationType + ' with uuid: ' + relationUUID);
 
-                    var relation = new RelationWrapper(relationSourceUUID, {relationUUID:relationUUID});
+                    var relation = new RelationWrapper(relationSourceUUID, {relationUUID: relationUUID});
                     var referenceTargetType = relation.getMetaInfo().referenceTargetType;
 
                     async.waterfall([
@@ -186,7 +185,7 @@ var CrudRelationControllerFactory = {
 
                             var deletedRelationWrapper = new RelationWrapper(relSourceUUID, deletedRelation.relation, relRef);
 
-                            callback(null, deletedRelationWrapper);
+                            return callback(null, deletedRelationWrapper);
                         }
                     ], function (err, retVal) {
                         if (err) {

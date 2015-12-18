@@ -9,9 +9,9 @@ function validateOrganization(organization, callback) {
     }
 
     if (retVal.length > 0) {
-        callback(retVal);
+        return callback(retVal);
     } else {
-        callback(null, organization);
+        return callback(null, organization);
     }
 }
 

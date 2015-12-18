@@ -20,9 +20,9 @@ function validatePostalAddress(postal, callback) {
         retVal.push('PostalAddress must have a country');
     }
     if (retVal.length > 0) {
-        callback(retVal);
+        return callback(retVal);
     } else {
-        callback(null, postal);
+        return  callback(null, postal);
     }
 }
 

@@ -58,7 +58,7 @@ describe("Test Crud Relation Controller", function () {
 
     describe("Test processing of relations", function () {
 
-        it("Test that relation can be resolved after it was saved", function (done) {
+        it("Test that relation can be resolved after it was saved", function (testDone) {
             var controller = CrudRelationController.getRelationCRUD(relationMap.bom.Person.PersonHasChild);
 
 
@@ -113,7 +113,7 @@ describe("Test Crud Relation Controller", function () {
                 function (err, relationsArray) {
                     should(err == null).be.ok();
                     should(relationsArray).have.property('length',1);
-                    return done(err);
+                    return testDone(err);
                 });
         });
     });

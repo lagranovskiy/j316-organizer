@@ -16,9 +16,9 @@ function validatePerson(person, callback) {
         retVal.push('Person must have a gender');
     }
     if (retVal.length > 0) {
-        callback(retVal);
+        return callback(retVal);
     } else {
-        callback(null, person);
+        return callback(null, person);
     }
 }
 

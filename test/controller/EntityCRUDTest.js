@@ -37,9 +37,9 @@ describe("Test Crud Entity Controller", function () {
                             }
                         }, function (err, data) {
                             if (err) {
-                                console.error(err);
+                                return callback(err);
                             }
-                            return callback(err, data);
+                            return callback(null, data);
                         });
                     },
                     function (savedPerson, callback) {
@@ -58,9 +58,9 @@ describe("Test Crud Entity Controller", function () {
                             }
                         }, function (err, data) {
                             if (err) {
-                                console.error(err);
+                                return callback(err);
                             }
-                            return callback(err, data);
+                            return callback(null, data);
                         });
                     }
                 ],
@@ -89,9 +89,9 @@ describe("Test Crud Entity Controller", function () {
                             }
                         }, function (err, data) {
                             if (err) {
-                                console.error(err);
+                                return callback(err);
                             }
-                            return callback(err, data);
+                            return callback(null, data);
                         });
                     },
                     function (savedPerson, callback) {
@@ -105,9 +105,9 @@ describe("Test Crud Entity Controller", function () {
                             }
                         }, function (err, data) {
                             if (err) {
-                                console.error(err);
+                                return callback(err);
                             }
-                            return callback(err, data);
+                            return callback(null, data);
                         });
                     }
                 ],
@@ -150,8 +150,8 @@ describe("Test Crud Entity Controller", function () {
                                 return callback(null, data);
                             }
                         }, function (err, data) {
-                            if(err){
-                                console.error(err);
+                            if (err) {
+                                return callback(err);
                             }
                             return callback(err, data);
                         });
@@ -169,36 +169,36 @@ describe("Test Crud Entity Controller", function () {
                             send: function (data) {
                                 should(data).exist;
                                 should(data.deleted).be.ok();
-                                callback(null, savedPerson);
+                                callback(null, deletedPerson);
                             }
                         }, function (err) {
-                            if(err){
-                                console.error(err);
+                            if (err) {
+                                return callback(err);
                             }
                             return callback(err, data);
                         });
-                    }, function (savedPerson, callback) {
+                    }, function (deletedPerson, callback) {
                         // Try to resolve deleted person
                         controller.getEntity({
-                            params: {uuid: savedPerson.uuid}
+                            params: {uuid: deletedPerson.uuid}
                         }, {
                             send: function (data) {
                                 should(data).be.not.ok();
-                                callback('Deleted entity could be resolved!!');
+                                return callback('Deleted entity could be resolved!!');
                             }
                         }, function (err) {
                             should(err).be.ok();
-                            if(err){
-                                console.error(err);
+                            if (err) {
+                                return callback(err);
                             }
-                            return callback(err, true);
+                            return callback(null, true);
                         });
                     }
                 ],
                 function (err, deletedSuccessfull) {
                     should(err).be.not.ok();
                     should(deletedSuccessfull).be.ok();
-                    done(err);
+                    return done(err);
                 });
         });
     });

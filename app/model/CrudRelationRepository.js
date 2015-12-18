@@ -51,7 +51,13 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
 
             return callback(null, retVal);
         }
-    ], retValCallback);
+    ], function (err, data) {
+        if (err) {
+            console.error('Problem by resolving of related relations of ' + meta.relationType + 'between ' + meta.sourceType + ' (' + meta.sourceUUID + ') and ' + meta.targetType + ' (' + meta.targetUUID + ')');
+            return retValCallback(err, data);
+        }
+        retValCallback(null, data)
+    });
 };
 
 
@@ -80,7 +86,7 @@ CrudRelationRepository.prototype.saveRelation = function (relation, retValCallba
         sourceUUID: meta.sourceUUID,
         targetUUID: meta.targetUUID,
         relationUUID: relation.relationUUID,
-        relationData: _.omit(relation,['ref','metaInfo'])
+        relationData: _.omit(relation, ['ref', 'metaInfo'])
     };
 
     async.waterfall([
@@ -138,7 +144,7 @@ CrudRelationRepository.prototype.deleteRelation = function (relation, retValCall
             return callback('Cannot delete ' + meta.relationType + ' with uuid ' + relation.relationUUID + ' . Not found');
         }
 
-        callback(null, {
+        return callback(null, {
             source: entityData[0].source.data,
             relation: entityData[0].relation.data,
             target: entityData[0].target.data,

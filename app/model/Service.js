@@ -9,9 +9,9 @@ function validateService(service, callback) {
     }
 
     if (retVal.length > 0) {
-        callback(retVal);
+        return callback(retVal);
     } else {
-        callback(null, service);
+        return callback(null, service);
     }
 }
 

@@ -151,7 +151,7 @@ CrudRepository.prototype.deleteEntity = function (entityType, uuid, retValCallba
             return callback('Cannot delete ' + entityType + ' with uuid ' + uuid + '. Not found');
         }
 
-        callback(null, {uuid: uuid, deleted: true});
+        return callback(null, {uuid: uuid, deleted: true});
     }], function (err, info) {
         if (err) {
             return retValCallback('Cannot delete ' + entityType + ' with uuid ' + uuid + ' : ' + err);
