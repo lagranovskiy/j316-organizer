@@ -44,23 +44,24 @@ module.exports = function (app) {
     /**
      * Person Relation Services
      */
-    app.delete('/relation/:uuid', personRelationController.listPersons);
-
-    app.get('/person/:uuid/relations/address', personRelationController.listPersons);
-    app.put('/person/:uuid/relation/address', personRelationController.listPersons);
-    app.get('/person/:uuid/relations/marriage', personRelationController.listPersons);
-    app.put('/person/:uuid/relation/marriage', personRelationController.listPersons);
-    app.get('/person/:uuid/relations/relatedPerson', personRelationController.listPersons);
-    app.put('/person/:uuid/relation/relatedPerson', personRelationController.listPersons);
-    app.get('/person/:uuid/relations/child', personRelationController.listPersons);
-    app.put('/person/:uuid/relations/child', personRelationController.listPersons);
-    app.get('/person/:uuid/relations/parent', personRelationController.listPersons);
-    app.put('/person/:uuid/relation/parent', personRelationController.listPersons);
-    app.get('/person/:uuid/relations/engagement', personRelationController.listPersons);
-    app.put('/person/:uuid/relation/engagement', personRelationController.listPersons);
-    app.get('/person/:uuid/relations/responsibility', personRelationController.listPersons);
-    app.put('/person/:uuid/relation/responsibility', personRelationController.listPersons);
-
+    
+    app.get('/person/:uuid/relations/address', personRelationController.getPersonIsHousekeeperOfPostalAddress);
+    app.put('/person/:uuid/relation/address', personRelationController.putPersonIsHousekeeperOfPostalAddress);
+    app.get('/person/:uuid/relations/marriage', personRelationController.getPersonIsMarriedWith);
+    app.put('/person/:uuid/relation/marriage', personRelationController.putPersonIsMarriedWith);
+    app.get('/person/:uuid/relations/relatedPerson', personRelationController.getPersonIsRelatedTo);
+    app.put('/person/:uuid/relation/relatedPerson', personRelationController.putPersonIsRelatedTo);
+    app.get('/person/:uuid/relations/child', personRelationController.getPersonHasChild);
+    app.put('/person/:uuid/relation/child', personRelationController.putPersonHasChild);
+    app.get('/person/:uuid/relations/parent', personRelationController.getPersonHasParent);
+    app.put('/person/:uuid/relation/parent', personRelationController.putPersonHasParent);
+    app.get('/person/:uuid/relations/engagement', personRelationController.getPersonParticipateInService);
+    app.put('/person/:uuid/relation/engagement', personRelationController.putPersonParticipateInService);
+    app.get('/person/:uuid/relations/responsibility', personRelationController.getPersonIsResponsibleForService);
+    app.put('/person/:uuid/relation/responsibility', personRelationController.putPersonIsResponsibleForService);
+    app.get('/person/:uuid/relations/membership', personRelationController.getPersonMemberOfOrganization);
+    app.put('/person/:uuid/relation/membership', personRelationController.putPersonMemberOfOrganization);
+    app.delete('/relation/:uuid', personRelationController.deletePersonRelation);
 
     /**
      * Operations for a single Postal Address

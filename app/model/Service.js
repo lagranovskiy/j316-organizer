@@ -34,7 +34,7 @@ var Service = function (serviceData) {
          * @returns {*}
          */
         get name() {
-            return data.street;
+            return serviceData.name;
         },
 
         /**
@@ -42,7 +42,7 @@ var Service = function (serviceData) {
          * @returns {*}
          */
         get comment() {
-            return data.zip;
+            return serviceData.comment;
         },
 
 

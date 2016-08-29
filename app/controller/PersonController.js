@@ -15,6 +15,9 @@ var PersonController = function () {
 
         /**
          * Returns a single Person by id
+         * 
+         * Expects param with uuid
+         * 
          * @param req
          * @param res
          * @param next

@@ -74,6 +74,6 @@ var Organization = function (oraganizationData) {
     });
 };
 
-util.inherits(PostalAddress, Entity);
+util.inherits(Organization, Entity);
 
-module.exports = Person;
+module.exports = Organization;

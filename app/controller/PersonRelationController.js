@@ -35,8 +35,26 @@ var PersonRelationController = function () {
             next.send('Not ready yet.');
 
         },
+        
+        
+        /**
+         * Removes a single person relation
+         * 
+         * @param req
+         * @param res
+         * @param next
+         */
+        deletePersonRelation : function(req, res, next){
+              var personUUID = req.params.uuid;
 
-    /**
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
+
+        /**
          * Resolves children of the given person
          * @param req
          * @param res
@@ -77,6 +95,21 @@ var PersonRelationController = function () {
             return next.send('Not ready yet.');
         },
 
+        /**
+         * Put Children of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonHasChild: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
 
         /**
          * Resolves Parents of the given person
@@ -85,6 +118,22 @@ var PersonRelationController = function () {
          * @param next
          */
         getPersonHasParent: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
+        
+         /**
+         * Put Parents of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonHasParent: function (req, res, next) {
             var personUUID = req.params.uuid;
 
             if (!personUUID) {
@@ -107,6 +156,21 @@ var PersonRelationController = function () {
             }
             next.send('Not ready yet.');
         },
+        
+         /**
+         * Put postal addressen of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonIsHousekeeperOfPostalAddress: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
 
         /**
          * Resolves marriage partner of the given person
@@ -115,6 +179,21 @@ var PersonRelationController = function () {
          * @param next
          */
         getPersonIsMarriedWith: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
+         /**
+         * Put marriage partner of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonIsMarriedWith: function (req, res, next) {
             var personUUID = req.params.uuid;
 
             if (!personUUID) {
@@ -137,7 +216,37 @@ var PersonRelationController = function () {
             }
             next.send('Not ready yet.');
         },
+        
+        /**
+         * Put related person of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonIsRelatedTo: function (req, res, next) {
+            var personUUID = req.params.uuid;
 
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+
+        /**
+         * Put related person of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonIsRelatedTo: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
         /**
          * Resolves Services the person is responsible for
          * @param req
@@ -145,6 +254,21 @@ var PersonRelationController = function () {
          * @param next
          */
         getPersonIsResponsibleForService: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
+         /**
+         * Put Services the person is responsible for
+         * @param req
+         * @param res
+         * @param next
+         */
+       putPersonIsResponsibleForService: function (req, res, next) {
             var personUUID = req.params.uuid;
 
             if (!personUUID) {
@@ -167,6 +291,21 @@ var PersonRelationController = function () {
             }
             next.send('Not ready yet.');
         },
+        
+         /**
+         * Put Organizations of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonMemberOfOrganization: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
 
         /**
          * Resolves currently participated services of the given person
@@ -175,6 +314,21 @@ var PersonRelationController = function () {
          * @param next
          */
         getPersonParticipateInService: function (req, res, next) {
+            var personUUID = req.params.uuid;
+
+            if (!personUUID) {
+                return next('Error. uuid is empty');
+            }
+            next.send('Not ready yet.');
+        },
+        
+          /**
+         * Put currently participated services of the given person
+         * @param req
+         * @param res
+         * @param next
+         */
+        putPersonParticipateInService: function (req, res, next) {
             var personUUID = req.params.uuid;
 
             if (!personUUID) {

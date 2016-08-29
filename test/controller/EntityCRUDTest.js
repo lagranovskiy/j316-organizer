@@ -4,7 +4,7 @@ var async = require('neo-async');
 var _ = require('underscore');
 var CrudEntityController = require('../../app/controller/CrudEntityController');
 
-describe("Test Crud Entity Controller", function () {
+describe("Test Crud Entity Controller", function() {
 
     var testPersonData = {
         forename: 'Max',
@@ -19,9 +19,9 @@ describe("Test Crud Entity Controller", function () {
     };
 
 
-    describe("Test get entities", function () {
+    describe("Test get entities", function() {
 
-        it("Test that entity can be resolved after it was saved", function (done) {
+        it("Test that entity can be resolved after it was saved", function(done) {
             var controller = CrudEntityController.getCRUD('Person');
             var req = {
                 body: testPersonData
@@ -29,34 +29,36 @@ describe("Test Crud Entity Controller", function () {
 
 
             async.waterfall([
-                    function (callback) {
+                    function(callback) {
                         controller.saveEntity(req, {
-                            send: function (data) {
+                            send: function(data) {
                                 should(data).exist;
                                 callback(null, data);
                             }
-                        }, function (err, data) {
+                        }, function(err, data) {
                             if (err) {
                                 return callback(err);
                             }
                             return callback(null, data);
                         });
                     },
-                    function (savedPerson, callback) {
+                    function(savedPerson, callback) {
                         should(savedPerson).exist;
                         should(savedPerson.uuid).exist;
 
                         req = {
-                            params: {uuid: savedPerson.uuid}
+                            params: {
+                                uuid: savedPerson.uuid
+                            }
                         };
 
 
                         controller.getEntity(req, {
-                            send: function (data) {
+                            send: function(data) {
                                 should(data).exist;
                                 return callback(null, data);
                             }
-                        }, function (err, data) {
+                        }, function(err, data) {
                             if (err) {
                                 return callback(err);
                             }
@@ -64,7 +66,7 @@ describe("Test Crud Entity Controller", function () {
                         });
                     }
                 ],
-                function (err, resolvedPerson) {
+                function(err, resolvedPerson) {
                     should(err == null).be.ok;
                     should(resolvedPerson.created).be.not.null;
                     return done(err);
@@ -73,7 +75,7 @@ describe("Test Crud Entity Controller", function () {
 
         });
 
-        it("Test list entities", function (done) {
+        it("Test list entities", function(done) {
             var controller = CrudEntityController.getCRUD('Person');
             var req = {
                 body: testPersonData
@@ -81,29 +83,29 @@ describe("Test Crud Entity Controller", function () {
 
 
             async.waterfall([
-                    function (callback) {
+                    function(callback) {
                         controller.saveEntity(req, {
-                            send: function (data) {
+                            send: function(data) {
                                 should(data).exist;
                                 return callback(null, data);
                             }
-                        }, function (err, data) {
+                        }, function(err, data) {
                             if (err) {
                                 return callback(err);
                             }
                             return callback(null, data);
                         });
                     },
-                    function (savedPerson, callback) {
+                    function(savedPerson, callback) {
                         should(savedPerson).exist;
                         should(savedPerson.uuid).exist;
 
                         controller.listEntity(null, {
-                            send: function (data) {
+                            send: function(data) {
                                 should(data).exist;
                                 return callback(null, data, savedPerson);
                             }
-                        }, function (err, data) {
+                        }, function(err, data) {
                             if (err) {
                                 return callback(err);
                             }
@@ -111,13 +113,13 @@ describe("Test Crud Entity Controller", function () {
                         });
                     }
                 ],
-                function (err, resolvedPersonArray, savedPerson) {
+                function(err, resolvedPersonArray, savedPerson) {
                     should(err == null).be.ok;
                     should(resolvedPersonArray.length).be.aboveOrEqual(1);
                     var itemFound = false;
 
                     // Search for recently saved item
-                    _.each(resolvedPersonArray, function (person) {
+                    _.each(resolvedPersonArray, function(person) {
                         if (savedPerson.uuid === person.uuid) {
                             itemFound = true;
                         }
@@ -134,9 +136,9 @@ describe("Test Crud Entity Controller", function () {
     });
 
 
-    describe("Test deleting of enitities", function () {
+    describe("Test deleting of enitities", function() {
 
-        it("Test item can be removed", function (done) {
+        it("Test item can be removed", function(done) {
 
             var controller = CrudEntityController.getCRUD('Person');
             var req = {
@@ -144,49 +146,54 @@ describe("Test Crud Entity Controller", function () {
             };
 
             async.waterfall([
-                    function (callback) {
+                    function(callback) {
                         controller.saveEntity(req, {
-                            send: function (data) {
+                            send: function(data) {
                                 return callback(null, data);
                             }
-                        }, function (err, data) {
+                        }, function(err, data) {
                             if (err) {
                                 return callback(err);
                             }
                             return callback(err, data);
                         });
                     },
-                    function (savedPerson, callback) {
+                    function(savedPerson, callback) {
                         should(savedPerson).exist;
                         should(savedPerson.uuid).exist;
 
                         req = {
-                            params: {uuid: savedPerson.uuid}
+                            params: {
+                                uuid: savedPerson.uuid
+                            }
                         };
 
 
                         controller.deleteEntity(req, {
-                            send: function (data) {
+                            send: function(data) {
                                 should(data).exist;
                                 should(data.deleted).be.ok();
-                                callback(null, deletedPerson);
+                                callback(null, savedPerson);
                             }
-                        }, function (err) {
+                        }, function(err, data) {
                             if (err) {
                                 return callback(err);
                             }
                             return callback(err, data);
                         });
-                    }, function (deletedPerson, callback) {
+                    },
+                    function(deletedPerson, callback) {
                         // Try to resolve deleted person
                         controller.getEntity({
-                            params: {uuid: deletedPerson.uuid}
+                            params: {
+                                uuid: deletedPerson.uuid
+                            }
                         }, {
-                            send: function (data) {
+                            send: function(data) {
                                 should(data).be.not.ok();
                                 return callback('Deleted entity could be resolved!!');
                             }
-                        }, function (err) {
+                        }, function(err) {
                             should(err).be.ok();
                             if (err) {
                                 return callback(err);
@@ -195,7 +202,7 @@ describe("Test Crud Entity Controller", function () {
                         });
                     }
                 ],
-                function (err, deletedSuccessfull) {
+                function(err, deletedSuccessfull) {
                     should(err).be.not.ok();
                     should(deletedSuccessfull).be.ok();
                     return done(err);
@@ -203,5 +210,4 @@ describe("Test Crud Entity Controller", function () {
         });
     });
 
-})
-;
+});

@@ -5,17 +5,17 @@ var _ = require('underscore');
 var CrudRelationRepository = require('../../app/model/CrudRelationRepository');
 var PersonHasChild = require('../../app/model/relation/PersonHasChild');
 
-describe("Test Crud Entity Relation Repository", function () {
+describe("Test Crud Entity Relation Repository", function() {
 
     var sandbox;
 
 
-    beforeEach(function () {
+    beforeEach(function() {
         sandbox = sinon.sandbox.create();
 
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sandbox.restore();
     });
 
@@ -44,16 +44,22 @@ describe("Test Crud Entity Relation Repository", function () {
         gender: 'MALE'
     };
 
-    describe("Test get entities", function () {
+    describe("Test get entities", function() {
 
-        it("Test that entity returns all relations correctly", function (done) {
+        it("Test that entity returns all relations correctly", function(done) {
 
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
                 should(data).have.property('sourceUUID', 'Person123');
                 callback(null, [{
-                    source: {data: testPersonData},
-                    relation: {data: relationPersonData},
-                    target: {data: childPersonData}
+                    source: {
+                        data: testPersonData
+                    },
+                    relation: {
+                        data: relationPersonData
+                    },
+                    target: {
+                        data: childPersonData
+                    }
                 }]);
             });
 
@@ -61,11 +67,10 @@ describe("Test Crud Entity Relation Repository", function () {
 
             var relation = new PersonHasChild('Person123');
 
-            crudRelationRepository.getRelated(relation, function (err, result) {
+            crudRelationRepository.getRelated(relation, function(err, result) {
                 should(err).be.null;
 
                 should(result).be.array;
-                should(result.length).be.equal(1);
                 should(result[0].source).have.property('uuid', 'Person123');
                 should(result[0].relation).have.property('relationUUID', 'ChildRelation123');
                 should(result[0].target).have.property('uuid', 'Person124');
@@ -73,9 +78,9 @@ describe("Test Crud Entity Relation Repository", function () {
             })
         });
 
-        it("Test that entity returns nothing if no relations exist", function (done) {
+        it("Test that entity returns nothing if no relations exist", function(done) {
 
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
                 callback(null, []);
             });
 
@@ -83,7 +88,7 @@ describe("Test Crud Entity Relation Repository", function () {
 
             var relation = new PersonHasChild('Person123');
 
-            crudRelationRepository.getRelated(relation, function (err, result) {
+            crudRelationRepository.getRelated(relation, function(err, result) {
                 should(err).be.null;
 
                 should(result).be.array;
@@ -94,19 +99,25 @@ describe("Test Crud Entity Relation Repository", function () {
 
     });
 
-    describe("Test saving of relation", function () {
-        it("Test that relation can be saved", function (done) {
+    describe("Test saving of relation", function() {
+        it("Test that relation can be saved", function(done) {
 
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
 
                 should(data).have.property('sourceUUID', 'Person123');
                 should(data).have.property('targetUUID', 'Person124');
                 should(data).have.property('relationUUID', 'ChildRelation123');
 
                 callback(null, [{
-                    source: {data: testPersonData},
-                    relation: {data: relationPersonData},
-                    target: {data: childPersonData}
+                    source: {
+                        data: testPersonData
+                    },
+                    relation: {
+                        data: relationPersonData
+                    },
+                    target: {
+                        data: childPersonData
+                    }
                 }]);
             });
 
@@ -115,7 +126,7 @@ describe("Test Crud Entity Relation Repository", function () {
 
             var relation = new PersonHasChild('Person123', relationPersonData, childPersonData);
 
-            crudRelationRepository.saveRelation(relation, function (err, result) {
+            crudRelationRepository.saveRelation(relation, function(err, result) {
                 should(err).be.null;
 
                 should(result.source).have.property('uuid', 'Person123');
@@ -127,18 +138,24 @@ describe("Test Crud Entity Relation Repository", function () {
 
     });
 
-    describe("Test removing of relations", function () {
+    describe("Test removing of relations", function() {
 
-        it("Test that relation can be remove", function (done) {
+        it("Test that relation can be remove", function(done) {
 
-            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function (query, data, callback) {
+            sandbox.stub(neo4j.GraphDatabase.prototype, 'query', function(query, data, callback) {
 
                 should(data).have.property('relationUUID', 'ChildRelation123');
 
                 callback(null, [{
-                    source: {data: testPersonData},
-                    relation: {data: relationPersonData},
-                    target: {data: childPersonData}
+                    source: {
+                        data: testPersonData
+                    },
+                    relation: {
+                        data: relationPersonData
+                    },
+                    target: {
+                        data: childPersonData
+                    }
                 }]);
             });
 
@@ -147,7 +164,7 @@ describe("Test Crud Entity Relation Repository", function () {
 
             var relation = new PersonHasChild('Person123', relationPersonData, childPersonData);
 
-            crudRelationRepository.deleteRelation(relation, function (err, result) {
+            crudRelationRepository.deleteRelation(relation, function(err, result) {
                 should(err == null).be.ok();
 
                 should(result.source).have.property('uuid', 'Person123');
