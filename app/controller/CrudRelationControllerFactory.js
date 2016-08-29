@@ -32,7 +32,7 @@ var CrudRelationControllerFactory = {
                  * @param next
                  */
                 getRelatedRelations: function (req, res, next) {
-                    var relationSourceUUID = req.params.uuid;
+                    var relationSourceUUID = req.params.sourceUUID;
 
                     if (!relationSourceUUID) {
                         return next('Error. UUID of relation source is empty');
@@ -86,7 +86,7 @@ var CrudRelationControllerFactory = {
                  * @returns {*}
                  */
                 saveRelation: function (req, res, next) {
-                    var relationSourceUUID = req.params.uuid;
+                    var relationSourceUUID = req.params.sourceUUID;
 
                     if (!relationSourceUUID) {
                         return next('Error. UUID of relation source is empty');
@@ -153,7 +153,7 @@ var CrudRelationControllerFactory = {
                  * @param next
                  */
                 deleteRelation: function (req, res, next) {
-                    var relationSourceUUID = req.params.uuid;
+                    var relationSourceUUID = req.params.sourceUUID;
                     var relationUUID = req.params.relationUUID;
 
                     if (!relationSourceUUID) {

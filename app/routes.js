@@ -1,8 +1,21 @@
-var personController = require('./controller/PersonController');
-var personRelationController = require('./controller/PersonRelationController');
-var postalAddressController = require('./controller/PostalAddressController');
-var serviceController = require('./controller/ServiceController');
-var organizationController = require('./controller/OrganizationController');
+var crudControllerFactory = require('./controller/CrudControllerFactory');
+var crudRelationControllerFactory = require('./controller/CrudRelationControllerFactory');
+
+var personController =  crudControllerFactory.getCRUD('Person');
+
+var personHasChildRelationController = crudRelationControllerFactory.getRelationCRUD('PersonHasChild');
+var personIsHousekeeperOfPostalAddressRelationController = crudRelationControllerFactory.getRelationCRUD('PersonIsHousekeeperOfPostalAddress');
+var personIsMarriedWithRelationController = crudRelationControllerFactory.getRelationCRUD('PersonIsMarriedWith');
+var personIsRelatedToRelationController = crudRelationControllerFactory.getRelationCRUD('PersonIsRelatedTo');
+var personParticipateInServiceRelationController = crudRelationControllerFactory.getRelationCRUD('PersonParticipateInService');
+var personHasParentRelationController = crudRelationControllerFactory.getRelationCRUD('PersonHasParent');
+var personIsResponsibleForServiceRelationController = crudRelationControllerFactory.getRelationCRUD('PersonIsResponsibleForService');
+var personIsMemberOfOrganizationRelationController = crudRelationControllerFactory.getRelationCRUD('PersonMemberOfOrganization');
+
+var serviceController =  crudControllerFactory.getCRUD('Service');
+var organizationController =  crudControllerFactory.getCRUD('Organization');
+var postalAddressController =  crudControllerFactory.getCRUD('PostalAddress');
+
 var config = require('../config/config');
 
 module.exports = function (app) {
@@ -31,62 +44,76 @@ module.exports = function (app) {
     /**
      * Operations for peson lists
      */
-    app.get('/person', personController.listPersons);
-
+    app.get('/person', personController.listEntity);
     /**
      * Operations for a single person
      */
-    app.get('/person/:uuid', personController.getPerson);
-    app.post('/person', personController.createPerson);
-    app.put('/person', personController.updatePerson);
-    app.delete('/person/:uuid', personController.deletePerson);
+    app.get('/person/:entityUUID', personController.getEntity);
+    app.post('/person', personController.saveEntity);
+    app.put('/person', personController.saveEntity);
+    app.delete('/person/:entityUUID', personController.deleteEntity);
 
     /**
      * Person Relation Services
      */
+   
+    app.get('/person/:sourceUUID/relations/child', personHasChildRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/relation/child', personHasChildRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/relation/:relationUUID/child', personHasChildRelationController.deleteRelation);
+
     
-    app.get('/person/:uuid/relations/address', personRelationController.getPersonIsHousekeeperOfPostalAddress);
-    app.put('/person/:uuid/relation/address', personRelationController.putPersonIsHousekeeperOfPostalAddress);
-    app.get('/person/:uuid/relations/marriage', personRelationController.getPersonIsMarriedWith);
-    app.put('/person/:uuid/relation/marriage', personRelationController.putPersonIsMarriedWith);
-    app.get('/person/:uuid/relations/relatedPerson', personRelationController.getPersonIsRelatedTo);
-    app.put('/person/:uuid/relation/relatedPerson', personRelationController.putPersonIsRelatedTo);
-    app.get('/person/:uuid/relations/child', personRelationController.getPersonHasChild);
-    app.put('/person/:uuid/relation/child', personRelationController.putPersonHasChild);
-    app.get('/person/:uuid/relations/parent', personRelationController.getPersonHasParent);
-    app.put('/person/:uuid/relation/parent', personRelationController.putPersonHasParent);
-    app.get('/person/:uuid/relations/engagement', personRelationController.getPersonParticipateInService);
-    app.put('/person/:uuid/relation/engagement', personRelationController.putPersonParticipateInService);
-    app.get('/person/:uuid/relations/responsibility', personRelationController.getPersonIsResponsibleForService);
-    app.put('/person/:uuid/relation/responsibility', personRelationController.putPersonIsResponsibleForService);
-    app.get('/person/:uuid/relations/membership', personRelationController.getPersonMemberOfOrganization);
-    app.put('/person/:uuid/relation/membership', personRelationController.putPersonMemberOfOrganization);
-    app.delete('/relation/:uuid', personRelationController.deletePersonRelation);
+    app.get('/person/:sourceUUID/relations/address', personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/relations/address', personIsHousekeeperOfPostalAddressRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/address', personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
+
+    app.get('/person/:sourceUUID/relations/marriage', personIsMarriedWithRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/relations/marriage', personIsMarriedWithRelationController.getRelatedRelations);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/marriage', personIsMarriedWithRelationController.getRelatedRelations);
+
+    app.get('/person/:sourceUUID/relations/relatedPerson', personIsRelatedToRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/relations/relatedPerson', personIsRelatedToRelationController.getRelatedRelations);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/relatedPerson', personIsRelatedToRelationController.getRelatedRelations);
+
+    app.get('/person/:sourceUUID/relations/parent', personHasParentRelationController.getPersonHasParent);
+    app.put('/person/:sourceUUID/relations/parent', personHasParentRelationController.getPersonHasParent);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/parent', personHasParentRelationController.getPersonHasParent);
+
+    app.get('/person/:sourceUUID/relations/engagement', personParticipateInServiceRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/relations/engagement', personParticipateInServiceRelationController.getRelatedRelations);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/engagement', personParticipateInServiceRelationController.getRelatedRelations);
+
+    app.get('/person/:sourceUUID/relations/responsibility', personIsResponsibleForServiceRelationController.getPersonIsResponsibleForService);
+    app.put('/person/:sourceUUID/relations/responsibility', personIsResponsibleForServiceRelationController.getPersonIsResponsibleForService);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/responsibility', personIsResponsibleForServiceRelationController.getPersonIsResponsibleForService);
+
+    app.get('/person/:sourceUUID/relations/membership', personIsMemberOfOrganizationRelationController.getPersonMemberOfOrganization);
+    app.put('/person/:sourceUUID/relations/membership', personIsMemberOfOrganizationRelationController.getPersonMemberOfOrganization);
+    app.delete('/person/:sourceUUID/relations/:relationUUID/membership', personIsMemberOfOrganizationRelationController.getPersonMemberOfOrganization);
 
     /**
      * Operations for a single Postal Address
      */
-    app.get('/postal', postalAddressController.listPostalAddress);
-    app.get('/postal/:uuid', postalAddressController.getPostalAddress);
-    app.put('/postal', postalAddressController.savePostalAddress);
-    app.delete('/postal/:uuid', postalAddressController.deletePostalAddress);
+    app.get('/postal', postalAddressController.listEntity);
+    app.get('/postal/:entityUUID', postalAddressController.getEntity);
+    app.put('/postal', postalAddressController.saveEntity);
+    app.delete('/postal/:entityUUID', postalAddressController.deleteEntity);
 
     /**
      * Operations for a single Service
      */
-    app.get('/service', serviceController.listService);
-    app.get('/service/:uuid', serviceController.getService);
-    app.put('/service', serviceController.saveService);
-    app.delete('/service/:uuid', serviceController.deleteService);
+    app.get('/service', serviceController.listEntity);
+    app.get('/service/:entityUUID', serviceController.getEntity);
+    app.put('/service', serviceController.saveEntity);
+    app.delete('/service/:entityUUID', serviceController.deleteEntity);
 
 
     /**
      * Operations for a single Organization
      */
-    app.get('/organization', organizationController.listOrganization);
-    app.get('/organization/:uuid', organizationController.getOrganization);
-    app.put('/organization', organizationController.saveOrganization);
-    app.delete('/organization/:uuid', organizationController.deleteOrganization);
+    app.get('/organization', organizationController.listEntity);
+    app.get('/organization/:entityUUID', organizationController.getEntity);
+    app.put('/organization', organizationController.saveEntity);
+    app.delete('/organization/:entityUUID', organizationController.deleteEntity);
 
 
     /**

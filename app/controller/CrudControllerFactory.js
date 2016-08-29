@@ -32,7 +32,7 @@ var CrudControllerFactory = {
              */
             getEntity: function (req, res, next) {
 
-                var entityUUID = req.params.uuid;
+                var entityUUID = req.params.entityUUID;
 
                 if (!entityUUID) {
                     return next('Error by getting entity of type ' + entityType + '. uuid is empty or not set.');
@@ -141,7 +141,7 @@ var CrudControllerFactory = {
              * @param next
              */
             deleteEntity: function (req, res, next) {
-                var entityUUID = req.params.uuid;
+                var entityUUID = req.params.entityUUID;
 
                 if (!entityUUID) {
                     return next('Error by deleting entity of type ' + entityType + '. uuid is empty or not set.');
