@@ -2,7 +2,7 @@ var should = require('should');
 var sinon = require('sinon');
 var async = require('neo-async');
 var _ = require('underscore');
-var CrudEntityController = require('../../app/controller/CrudEntityController');
+var CrudEntityController = require('../../app/controller/CrudControllerFactory');
 
 describe("Test Crud Entity Controller", function() {
 

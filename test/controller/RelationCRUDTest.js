@@ -3,8 +3,8 @@ var sinon = require('sinon');
 var async = require('neo-async');
 var _ = require('underscore');
 var relationMap = require('../../config/relationMap');
-var CrudEntityController = require('../../app/controller/CrudEntityController');
-var CrudRelationController = require('../../app/controller/CrudRelationController');
+var CrudEntityController = require('../../app/controller/CrudControllerFactory');
+var CrudRelationController = require('../../app/controller/CrudRelationControllerFactory');
 
 
 /**

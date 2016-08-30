@@ -1,7 +1,7 @@
 var crudControllerFactory = require('./controller/CrudControllerFactory');
 var crudRelationControllerFactory = require('./controller/CrudRelationControllerFactory');
 
-var personController =  crudControllerFactory.getCRUD('Person');
+var personController = crudControllerFactory.getCRUD('Person');
 
 var personHasChildRelationController = crudRelationControllerFactory.getRelationCRUD('PersonHasChild');
 var personIsHousekeeperOfPostalAddressRelationController = crudRelationControllerFactory.getRelationCRUD('PersonIsHousekeeperOfPostalAddress');
@@ -12,16 +12,25 @@ var personHasParentRelationController = crudRelationControllerFactory.getRelatio
 var personIsResponsibleForServiceRelationController = crudRelationControllerFactory.getRelationCRUD('PersonIsResponsibleForService');
 var personIsMemberOfOrganizationRelationController = crudRelationControllerFactory.getRelationCRUD('PersonMemberOfOrganization');
 
-var serviceController =  crudControllerFactory.getCRUD('Service');
-var organizationController =  crudControllerFactory.getCRUD('Organization');
-var postalAddressController =  crudControllerFactory.getCRUD('PostalAddress');
+var serviceController = crudControllerFactory.getCRUD('Service');
+
+var serviceParticipatedPersonRelationController = crudRelationControllerFactory.getRelationCRUD('ServiceParticipatedPerson');
+
+var organizationController = crudControllerFactory.getCRUD('Organization');
+
+var organizationActiveMemberRelationController = crudRelationControllerFactory.getRelationCRUD('OrganizationActiveMember');
+var organizationHasLocationRelationController = crudRelationControllerFactory.getRelationCRUD('OrganizationHasLocation');
+var organizationInactiveMemberRelationController = crudRelationControllerFactory.getRelationCRUD('OrganizationInactiveMember');
+var organizationProvidesServiceRelationController = crudRelationControllerFactory.getRelationCRUD('OrganizationProvidesService');
+
+var postalAddressController = crudControllerFactory.getCRUD('PostalAddress');
 
 var config = require('../config/config');
 
-module.exports = function (app) {
+module.exports = function(app) {
 
 
-    var errorHandler = function (err, req, res, next) {
+    var errorHandler = function(err, req, res, next) {
         console.error(err.stack);
 
         res.status(500).json({
@@ -32,7 +41,7 @@ module.exports = function (app) {
     app.use(errorHandler);
 
 
-    app.all('*', function (req, res, next) {
+    app.all('*', function(req, res, next) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
@@ -56,39 +65,39 @@ module.exports = function (app) {
     /**
      * Person Relation Services
      */
-   
-    app.get('/person/:sourceUUID/relations/child', personHasChildRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/relation/child', personHasChildRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/relation/:relationUUID/child', personHasChildRelationController.deleteRelation);
 
-    
-    app.get('/person/:sourceUUID/relations/address', personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/relations/address', personIsHousekeeperOfPostalAddressRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/address', personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
+    app.get('/person/:sourceUUID/child', personHasChildRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/child', personHasChildRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/child/:relationUUID', personHasChildRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/relations/marriage', personIsMarriedWithRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/relations/marriage', personIsMarriedWithRelationController.getRelatedRelations);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/marriage', personIsMarriedWithRelationController.getRelatedRelations);
 
-    app.get('/person/:sourceUUID/relations/relatedPerson', personIsRelatedToRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/relations/relatedPerson', personIsRelatedToRelationController.getRelatedRelations);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/relatedPerson', personIsRelatedToRelationController.getRelatedRelations);
+    app.get('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/address/:relationUUID', personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/relations/parent', personHasParentRelationController.getPersonHasParent);
-    app.put('/person/:sourceUUID/relations/parent', personHasParentRelationController.getPersonHasParent);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/parent', personHasParentRelationController.getPersonHasParent);
+    app.get('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/marriage/:relationUUID', personIsMarriedWithRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/relations/engagement', personParticipateInServiceRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/relations/engagement', personParticipateInServiceRelationController.getRelatedRelations);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/engagement', personParticipateInServiceRelationController.getRelatedRelations);
+    app.get('/person/:sourceUUID/relation', personIsRelatedToRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/relation', personIsRelatedToRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/relation/:relationUUID', personIsRelatedToRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/relations/responsibility', personIsResponsibleForServiceRelationController.getPersonIsResponsibleForService);
-    app.put('/person/:sourceUUID/relations/responsibility', personIsResponsibleForServiceRelationController.getPersonIsResponsibleForService);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/responsibility', personIsResponsibleForServiceRelationController.getPersonIsResponsibleForService);
+    app.get('/person/:sourceUUID/parent', personHasParentRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/parent', personHasParentRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/parent/:relationUUID', personHasParentRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/relations/membership', personIsMemberOfOrganizationRelationController.getPersonMemberOfOrganization);
-    app.put('/person/:sourceUUID/relations/membership', personIsMemberOfOrganizationRelationController.getPersonMemberOfOrganization);
-    app.delete('/person/:sourceUUID/relations/:relationUUID/membership', personIsMemberOfOrganizationRelationController.getPersonMemberOfOrganization);
+    app.get('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/engagement/:relationUUID', personParticipateInServiceRelationController.deleteRelation);
+
+    app.get('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/responsibility/:relationUUID', personIsResponsibleForServiceRelationController.deleteRelation);
+
+    app.get('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.getRelatedRelations);
+    app.put('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.saveRelation);
+    app.delete('/person/:sourceUUID/membership/:relationUUID', personIsMemberOfOrganizationRelationController.deleteRelation);
 
     /**
      * Operations for a single Postal Address
@@ -106,6 +115,9 @@ module.exports = function (app) {
     app.put('/service', serviceController.saveEntity);
     app.delete('/service/:entityUUID', serviceController.deleteEntity);
 
+    app.get('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.getRelatedRelations);
+    app.put('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.saveRelation);
+    app.delete('/service/:sourceUUID/participant/:relationUUID', serviceParticipatedPersonRelationController.deleteRelation);
 
     /**
      * Operations for a single Organization
@@ -115,6 +127,21 @@ module.exports = function (app) {
     app.put('/organization', organizationController.saveEntity);
     app.delete('/organization/:entityUUID', organizationController.deleteEntity);
 
+    app.get('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.getRelatedRelations);
+    app.put('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.saveRelation);
+    app.delete('/organization/:sourceUUID/activemember/:relationUUID', organizationActiveMemberRelationController.deleteRelation);
+    
+    app.get('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.getRelatedRelations);
+    app.put('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.saveRelation);
+    app.delete('/organization/:sourceUUID/inactivemember/:relationUUID', organizationInactiveMemberRelationController.deleteRelation);
+
+    app.get('/organization/:sourceUUID/location', organizationHasLocationRelationController.getRelatedRelations);
+    app.put('/organization/:sourceUUID/location', organizationHasLocationRelationController.saveRelation);
+    app.delete('/organization/:sourceUUID/location/:relationUUID', organizationHasLocationRelationController.deleteRelation);
+
+    app.get('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.getRelatedRelations);
+    app.put('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.saveRelation);
+    app.delete('/organization/:sourceUUID/service/:relationUUID', organizationProvidesServiceRelationController.deleteRelation);
 
     /**
      * Test if the caller gave the apiToken in the apiToken query param.

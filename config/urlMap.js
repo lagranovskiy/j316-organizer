@@ -8,11 +8,12 @@ var urlMap = {
             relations: {
                 address: config.hostname + 'person/{uuid}/address',
                 marriage: config.hostname + 'person/{uuid}/marriage',
-                relatedPerson: config.hostname + 'person/{uuid}/relatedPerson',
+                relatedPerson: config.hostname + 'person/{uuid}/relation',
                 child: config.hostname + 'person/{uuid}/child',
                 parent: config.hostname + 'person/{uuid}/parent',
                 engagement: config.hostname + 'person/{uuid}/engagement',
-                responsibility: config.hostname + 'person/{uuid}/responsibility'
+                responsibility: config.hostname + 'person/{uuid}/responsibility',
+                membership: config.hostname + 'person/{uuid}/membership'
             }
         },
         service: {
