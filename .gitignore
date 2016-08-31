@@ -3,6 +3,8 @@
 logs
 *.log
 
+public/bower_components/*
+
 # Runtime data
 pids
 *.pid
