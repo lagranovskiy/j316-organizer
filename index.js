@@ -1,4 +1,4 @@
-require('newrelic');
+//require('newrelic');
 var express = require('express');
 var app = express();
 
@@ -20,7 +20,7 @@ app.use(cookieParser('')); // read cookies (needed for auth)
 
 require('./app/routes.js')(app);
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public/dist/'));
 
 app.listen(config.httpPort, function () {
     console.log('Node app is running on port', config.httpPort);
