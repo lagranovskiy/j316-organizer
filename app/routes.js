@@ -1,6 +1,9 @@
 var crudControllerFactory = require('./controller/CrudControllerFactory');
 var crudRelationControllerFactory = require('./controller/CrudRelationControllerFactory');
 
+var servicePlanController = crudControllerFactory.getCRUD('ServicePlan');
+
+
 var personController = crudControllerFactory.getCRUD('Person');
 
 var personHasChildRelationController = crudRelationControllerFactory.getRelationCRUD('PersonHasChild');
@@ -27,10 +30,10 @@ var postalAddressController = crudControllerFactory.getCRUD('PostalAddress');
 
 var config = require('../config/config');
 
-module.exports = function(app) {
+module.exports = function (app) {
 
 
-    var errorHandler = function(err, req, res, next) {
+    var errorHandler = function (err, req, res, next) {
         console.error(err.stack);
 
         res.status(500).json({
@@ -41,7 +44,7 @@ module.exports = function(app) {
     app.use(errorHandler);
 
 
-    app.all('*', function(req, res, next) {
+    app.all('*', function (req, res, next) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
@@ -49,6 +52,15 @@ module.exports = function(app) {
         next();
     });
 
+    /**
+     * Operations of Service Plans
+     */
+
+    app.get('/serviceplan', servicePlanController.listEntity);
+    app.get('/serviceplan/:entityUUID', servicePlanController.getEntity);
+    app.post('/serviceplan', servicePlanController.saveEntity);
+    app.put('/serviceplan', servicePlanController.saveEntity);
+    app.delete('/serviceplan/:entityUUID', servicePlanController.deleteEntity);
 
     /**
      * Operations for peson lists
@@ -130,7 +142,7 @@ module.exports = function(app) {
     app.get('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.getRelatedRelations);
     app.put('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.saveRelation);
     app.delete('/organization/:sourceUUID/activemember/:relationUUID', organizationActiveMemberRelationController.deleteRelation);
-    
+
     app.get('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.getRelatedRelations);
     app.put('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.saveRelation);
     app.delete('/organization/:sourceUUID/inactivemember/:relationUUID', organizationInactiveMemberRelationController.deleteRelation);

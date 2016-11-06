@@ -4,7 +4,8 @@ var relationMap = {
         Person: 'Person',
         Service: 'Service',
         Organization: 'Organization',
-        PostalAddress: 'PostalAddress'
+        PostalAddress: 'PostalAddress',
+        ServicePlan: 'ServicePlan'
     },
     relations: {
         Organization: {

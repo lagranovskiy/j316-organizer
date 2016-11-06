@@ -1,8 +1,8 @@
-var CrudRepository = require('../model/CrudRepository');
+var CrudRepository = require('../../model/CrudRepository');
 var crudRepository = new CrudRepository();
-var Organization = require('../model/Organization');
+var Organization = require('../../model/Organization');
 var uuid = require('node-uuid');
-var relationMap = require('../../config/relationMap');
+var relationMap = require('../../../config/relationMap');
 var _ = require('underscore');
 
 /**

@@ -1,7 +1,7 @@
 /**
  * Represents a identifiable Relation
  *
- * @param relationUUID uuid of the relation
+ * @param data data of the relation
  * @param ref referenced (asked) object. It depends of the answered question what kind of object is referenced. It can be target or source object according to special relation
  * @param sourceType type of the source object
  * @param relationType type of the relation

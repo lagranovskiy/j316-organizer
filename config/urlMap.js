@@ -36,6 +36,10 @@ var urlMap = {
             self: config.hostname + 'postaladdress/{uuid}',
             relations: {}
         },
+        servicePlan: {
+            self: config.hostname + 'serviceplan/{uuid}',
+            relations: {}
+        },
 
 
         /**
