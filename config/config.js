@@ -4,7 +4,7 @@ var config = {
     httpPort: process.env.PORT || 8080,
     env: process.env.NODE_ENV || 'dev',
     apiToken: process.env.API_TOKEN || '',
-    neo4j: process.env.NEO4J_URL || 'http://neo4j:prodyna@localhost:7474',
+    neo4j: process.env.GRAPHENEDB_URL || 'http://neo4j:prodyna@localhost:7474',
     init: function () {
         return this;
     }
