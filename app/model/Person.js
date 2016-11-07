@@ -133,7 +133,27 @@ var Person = function (personData) {
             return data.wasActiveMemberTill;
         },
 
+        /**
+        * Returns person setting according to email notifications
+        */
+        get notificationEmail(){
+            return data.notificationEmail;
+        },
 
+        
+        /**
+        * Returns person setting according to sms notifications
+        */
+        get notificationSMS(){
+            return data.notificationSMS;
+        },
+        
+        /**
+        * Returns person setting according to calender notifications
+        */
+        get notificationCal(){
+            return data.notificationCal;
+        },
         /**
          * Returns the comment to the person
          * @returns {*}

@@ -40,6 +40,26 @@ var PostalAddress = function (postalAddressData) {
     return extend(PostalAddress.super_(data), {
 
         /**
+        * Returns location string
+        */
+        get location(){
+            return data.location;
+        },
+
+        /**
+        * returns GPS latitude of person
+        */
+        get latitude(){
+            return data.latitude;
+        },
+
+        /*
+        * Returns GPS longitude of person
+        */
+        get longitude(){
+            return data.longitude;
+        },
+        /**
          * Returns the street information
          *
          * @returns {*}•
