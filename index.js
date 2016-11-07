@@ -1,6 +1,7 @@
 //require('newrelic');
 var express = require('express');
 var app = express();
+var router = express.Router();
 
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -17,8 +18,10 @@ app.use(bodyParser.json()); // get information from html forms
 app.use(methodOverride()); // simulate DELETE and PUT
 app.use(cookieParser('')); // read cookies (needed for auth)
 
+// Initialize routes
+require('./app/routes.js')(router);
+app.use('/api', router);
 
-require('./app/routes.js')(app);
 
 app.use(express.static(__dirname + '/public/dist/'));
 

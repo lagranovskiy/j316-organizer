@@ -30,7 +30,7 @@ var postalAddressController = crudControllerFactory.getCRUD('PostalAddress');
 
 var config = require('../config/config');
 
-module.exports = function (app) {
+module.exports = function (router) {
 
 
     var errorHandler = function (err, req, res, next) {
@@ -41,10 +41,9 @@ module.exports = function (app) {
             error: err
         });
     };
-    app.use(errorHandler);
+    router.use(errorHandler);
 
-
-    app.all('*', function (req, res, next) {
+    router.all('*', function (req, res, next) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
@@ -56,104 +55,104 @@ module.exports = function (app) {
      * Operations of Service Plans
      */
 
-    app.get('/serviceplan', servicePlanController.listEntity);
-    app.get('/serviceplan/:entityUUID', servicePlanController.getEntity);
-    app.post('/serviceplan', servicePlanController.saveEntity);
-    app.put('/serviceplan', servicePlanController.saveEntity);
-    app.delete('/serviceplan/:entityUUID', servicePlanController.deleteEntity);
+    router.get('/serviceplan', servicePlanController.listEntity);
+    router.get('/serviceplan/:entityUUID', servicePlanController.getEntity);
+    router.post('/serviceplan', servicePlanController.saveEntity);
+    router.put('/serviceplan', servicePlanController.saveEntity);
+    router.delete('/serviceplan/:entityUUID', servicePlanController.deleteEntity);
 
     /**
      * Operations for peson lists
      */
-    app.get('/person', personController.listEntity);
+    router.get('/person', personController.listEntity);
     /**
      * Operations for a single person
      */
-    app.get('/person/:entityUUID', personController.getEntity);
-    app.post('/person', personController.saveEntity);
-    app.put('/person', personController.saveEntity);
-    app.delete('/person/:entityUUID', personController.deleteEntity);
+    router.get('/person/:entityUUID', personController.getEntity);
+    router.post('/person', personController.saveEntity);
+    router.put('/person', personController.saveEntity);
+    router.delete('/person/:entityUUID', personController.deleteEntity);
 
     /**
      * Person Relation Services
      */
 
-    app.get('/person/:sourceUUID/child', personHasChildRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/child', personHasChildRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/child/:relationUUID', personHasChildRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/child', personHasChildRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/child', personHasChildRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/child/:relationUUID', personHasChildRelationController.deleteRelation);
 
 
-    app.get('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/address/:relationUUID', personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/address/:relationUUID', personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/marriage/:relationUUID', personIsMarriedWithRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/marriage/:relationUUID', personIsMarriedWithRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/relation', personIsRelatedToRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/relation', personIsRelatedToRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/relation/:relationUUID', personIsRelatedToRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/relation', personIsRelatedToRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/relation', personIsRelatedToRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/relation/:relationUUID', personIsRelatedToRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/parent', personHasParentRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/parent', personHasParentRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/parent/:relationUUID', personHasParentRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/parent', personHasParentRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/parent', personHasParentRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/parent/:relationUUID', personHasParentRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/engagement/:relationUUID', personParticipateInServiceRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/engagement/:relationUUID', personParticipateInServiceRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/responsibility/:relationUUID', personIsResponsibleForServiceRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/responsibility/:relationUUID', personIsResponsibleForServiceRelationController.deleteRelation);
 
-    app.get('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.getRelatedRelations);
-    app.put('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.saveRelation);
-    app.delete('/person/:sourceUUID/membership/:relationUUID', personIsMemberOfOrganizationRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/membership/:relationUUID', personIsMemberOfOrganizationRelationController.deleteRelation);
 
     /**
      * Operations for a single Postal Address
      */
-    app.get('/postal', postalAddressController.listEntity);
-    app.get('/postal/:entityUUID', postalAddressController.getEntity);
-    app.put('/postal', postalAddressController.saveEntity);
-    app.delete('/postal/:entityUUID', postalAddressController.deleteEntity);
+    router.get('/postal', postalAddressController.listEntity);
+    router.get('/postal/:entityUUID', postalAddressController.getEntity);
+    router.put('/postal', postalAddressController.saveEntity);
+    router.delete('/postal/:entityUUID', postalAddressController.deleteEntity);
 
     /**
      * Operations for a single Service
      */
-    app.get('/service', serviceController.listEntity);
-    app.get('/service/:entityUUID', serviceController.getEntity);
-    app.put('/service', serviceController.saveEntity);
-    app.delete('/service/:entityUUID', serviceController.deleteEntity);
+    router.get('/service', serviceController.listEntity);
+    router.get('/service/:entityUUID', serviceController.getEntity);
+    router.put('/service', serviceController.saveEntity);
+    router.delete('/service/:entityUUID', serviceController.deleteEntity);
 
-    app.get('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.getRelatedRelations);
-    app.put('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.saveRelation);
-    app.delete('/service/:sourceUUID/participant/:relationUUID', serviceParticipatedPersonRelationController.deleteRelation);
+    router.get('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.getRelatedRelations);
+    router.put('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.saveRelation);
+    router.delete('/service/:sourceUUID/participant/:relationUUID', serviceParticipatedPersonRelationController.deleteRelation);
 
     /**
      * Operations for a single Organization
      */
-    app.get('/organization', organizationController.listEntity);
-    app.get('/organization/:entityUUID', organizationController.getEntity);
-    app.put('/organization', organizationController.saveEntity);
-    app.delete('/organization/:entityUUID', organizationController.deleteEntity);
+    router.get('/organization', organizationController.listEntity);
+    router.get('/organization/:entityUUID', organizationController.getEntity);
+    router.put('/organization', organizationController.saveEntity);
+    router.delete('/organization/:entityUUID', organizationController.deleteEntity);
 
-    app.get('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.getRelatedRelations);
-    app.put('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.saveRelation);
-    app.delete('/organization/:sourceUUID/activemember/:relationUUID', organizationActiveMemberRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/activemember/:relationUUID', organizationActiveMemberRelationController.deleteRelation);
 
-    app.get('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.getRelatedRelations);
-    app.put('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.saveRelation);
-    app.delete('/organization/:sourceUUID/inactivemember/:relationUUID', organizationInactiveMemberRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/inactivemember/:relationUUID', organizationInactiveMemberRelationController.deleteRelation);
 
-    app.get('/organization/:sourceUUID/location', organizationHasLocationRelationController.getRelatedRelations);
-    app.put('/organization/:sourceUUID/location', organizationHasLocationRelationController.saveRelation);
-    app.delete('/organization/:sourceUUID/location/:relationUUID', organizationHasLocationRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/location', organizationHasLocationRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/location', organizationHasLocationRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/location/:relationUUID', organizationHasLocationRelationController.deleteRelation);
 
-    app.get('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.getRelatedRelations);
-    app.put('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.saveRelation);
-    app.delete('/organization/:sourceUUID/service/:relationUUID', organizationProvidesServiceRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/service/:relationUUID', organizationProvidesServiceRelationController.deleteRelation);
 
     /**
      * Test if the caller gave the apiToken in the apiToken query param.
