@@ -70,7 +70,7 @@ CrudRelationRepository.prototype.getRelated = function (relation, retValCallback
 CrudRelationRepository.prototype.saveRelation = function (relation, retValCallback) {
     var meta = relation.getMetaInfo();
 
-    console.info('Saving relation of relation ' + meta.relationType + ' (' + relation.uuid + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ')');
+    console.info('Saving relation of type ' + meta.relationType + ' (' + relation.relationUUID + ') between ' + meta.sourceType + '(uuid:' + meta.sourceUUID + ') and ' + meta.targetType + '(uuid:' + meta.targetUUID + ')');
 
     relation.isDeleted = false;
 

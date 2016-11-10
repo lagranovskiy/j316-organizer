@@ -139,7 +139,7 @@ var CrudRelationControllerFactory = {
                         console.error('Cannot save ' + relation.getMetaInfo().relationType + '. ' + err);
                         return next(err);
                     }
-                    console.info('Request for saving of ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ' + retVal.length + ' relations saved');
+                    console.info('Request for saving of ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ');
                     return res.send(retVal);
                 });
 
