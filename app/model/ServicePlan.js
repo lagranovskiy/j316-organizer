@@ -101,6 +101,37 @@ var ServicePlan = function (servicePlanData) {
 
 
         /**
+         * Returns plan setting according to email notifications
+         */
+        get notificationEmail() {
+            return data.notificationEmail;
+        },
+
+
+        /**
+         * Returns plan setting according to sms notifications
+         */
+        get notificationSMS() {
+            return data.notificationSMS;
+        },
+
+        /**
+         * Returns plan setting according to calender notifications
+         */
+        get notificationCal() {
+            return data.notificationCal;
+        },
+
+        /**
+         * Getter for sms configured text
+         * @returns {*}
+         */
+        get smsText() {
+            return data.smsText;
+        },
+
+
+        /**
          * Returns the plan document data as stringified JSON Object
          * @returns {*}
          */

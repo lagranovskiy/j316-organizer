@@ -9,7 +9,7 @@ var requestify = require('requestify');
  */
 var J316NotificationAdapter = function () {
 
-    var adapter = {
+    return {
 
 
         /**
@@ -18,20 +18,20 @@ var J316NotificationAdapter = function () {
          * @param callback callback
          * @return {*}
          */
-        scheduleNotification: function ( callback) {
-           var notification = {
-               scheduledDate:'2016-07-29T13:00:00.000Z',
-               subject:'Test',
-               message:'Hello World',
-               recipient:{
-                   name:'Leonid',
-                   email:'test@agranovskiy.de',
-                   mobile:'017617870248'
-               },
-               notificationType:'EMAIL',
-               referenceId:'qweetrwefwf',
-               category:['234234234234','Plan1234Q1']
-           };
+        scheduleNotification: function (callback) {
+            var notification = {
+                scheduledDate: '2016-07-29T13:00:00.000Z',
+                subject: 'Test',
+                message: 'Hello World',
+                recipient: {
+                    name: 'Leonid',
+                    email: 'test@agranovskiy.de',
+                    mobile: '017617870248'
+                },
+                notificationType: 'EMAIL',
+                referenceId: 'qweetrwefwf',
+                category: ['234234234234', 'Plan1234Q1']
+            };
 
             requestify.post('https://j316-notificator.herokuapp.com/notification')
                 .then(function (response) {
@@ -89,13 +89,13 @@ var J316NotificationAdapter = function () {
                 return callback('Cannot query category and reference together. Please decide you for one of them');
             }
 
-            var suffix = '/';
-            if (categoryUUID) {
-                suffix += 'category/' + categoryUUID;
-            } else if (referenceUUID) {
-                suffix += 'reference/' + referenceUUID;
-            }
-            requestify.delete('https://j316-notificator.herokuapp.com/notification' + suffix)
+            var removeRequest = {
+                category: categoryUUID,
+                referenceId: referenceUUID,
+                isSent: true
+            };
+
+            requestify.delete('https://j316-notificator.herokuapp.com/notification', removeRequest)
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {
@@ -108,9 +108,7 @@ var J316NotificationAdapter = function () {
 
     };
 
-    return adapter;
-
 };
 
 
-module.exports = new J316NotificationAdapter();
+module.exports = J316NotificationAdapter;

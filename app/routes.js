@@ -57,14 +57,23 @@ module.exports = function (router) {
 
     router.get('/serviceplan', servicePlanController.listEntity);
     router.get('/serviceplan/:entityUUID', servicePlanController.getEntity);
-    router.get('/serviceplan/:entityUUID/notifications', planNotificationController.getPlanNotifications);
 
     router.post('/serviceplan', servicePlanController.saveEntity);
     router.put('/serviceplan', servicePlanController.saveEntity);
     router.delete('/serviceplan/:entityUUID', servicePlanController.deleteEntity);
 
     /**
-     * Operations for peson lists
+     *  Operations on notifications
+     */
+    router.post('/serviceplan/:planUUID/notifications/start', planNotificationController.generatePlanNotifications);
+    router.get('/serviceplan/:planUUID/notifications', planNotificationController.getPlanNotifications);
+    router.get('/person/:personUUID/notifications', planNotificationController.getPersonNotifications);
+    router.delete('/serviceplan/:planUUID/notifications', planNotificationController.cancelPersonPlanNotifications);
+    router.delete('/serviceplan/:planUUID/person/:personUUID/notifications', planNotificationController.cancelPersonPlanNotifications);
+    router.delete('/person/:personUUID/notifications', planNotificationController.cancelPersonPlanNotifications);
+
+    /**
+     * Operations for person lists
      */
     router.get('/person', personController.listEntity);
     /**
