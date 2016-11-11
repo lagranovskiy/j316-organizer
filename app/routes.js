@@ -2,7 +2,7 @@ var crudControllerFactory = require('./controller/CrudControllerFactory');
 var crudRelationControllerFactory = require('./controller/CrudRelationControllerFactory');
 
 var servicePlanController = crudControllerFactory.getCRUD('ServicePlan');
-
+var planNotificationController = require('./controller/PlanNotificationController');
 
 var personController = crudControllerFactory.getCRUD('Person');
 
@@ -57,6 +57,8 @@ module.exports = function (router) {
 
     router.get('/serviceplan', servicePlanController.listEntity);
     router.get('/serviceplan/:entityUUID', servicePlanController.getEntity);
+    router.get('/serviceplan/:entityUUID/notifications', planNotificationController.getPlanNotifications);
+
     router.post('/serviceplan', servicePlanController.saveEntity);
     router.put('/serviceplan', servicePlanController.saveEntity);
     router.delete('/serviceplan/:entityUUID', servicePlanController.deleteEntity);
