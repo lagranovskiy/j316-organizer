@@ -136,7 +136,10 @@ var NotificationBusiness = function () {
                 }
             };
 
-            retVal.eventDates = generateEventDates(requestData.planStart, requestData.planEnd, requestData.eventRecurringDays);
+            retVal.eventDates = generateEventDates(
+                requestData.servicePlan.planStart,
+                requestData.servicePlan.planEnd,
+                requestData.servicePlan.eventRecurringDays);
 
             _.forEach(requestData.servicePlanGroups, function (groupInfo) {
                 _.forEach(groupInfo.sections, function (sectionInfo) {
@@ -149,7 +152,7 @@ var NotificationBusiness = function () {
                     };
 
                     _.forEach(sectionInfo.participants, function (participantRef) {
-                        var participant = requestData.participantsMap[participantRef.uuid];
+                        var participant = requestData.participantsMap[participantRef.participantUUID];
                         if (participant) {
                             calGroup.participants.push(participant);
                         }

@@ -33,7 +33,7 @@ var PlanNotificationController = function () {
             var planUUID = req.params.planUUID;
 
             // Resolve Plan
-            async.parallel([
+            async.waterfall([
                 // Fetch plan first
                 function (callback) {
                     crudRepository.getEntity('ServicePlan', planUUID, callback)
@@ -55,25 +55,32 @@ var PlanNotificationController = function () {
 
 
                     // Fetch persons that are participated to the plan according to the serialized info on service plan
+                    var resolveCallArray = [];
                     _.forEach(parsedGroupArray, function (groupInfo) {
                         _.forEach(groupInfo.sections, function (sectionInfo) {
-                            async.map(sectionInfo.participants, function (participantRef, callBack) {
-                                if (!notificationRq.participantsMap[participantRef.participantUUID]) {
-                                    crudRepository.getEntity('Person', participantRef.participantUUID, callBack);
-                                } else {
-                                    return callBack(null);
-                                }
-                            }, function (err, fetchedParticipants) {
-                                _.forEach(fetchedParticipants, function (personData) {
-                                    if (personData) {
-                                        notificationRq.participantsMap[personData.uuid] = new Person(personData);
-                                    }
-                                });
-                            });
+                            _.forEach(sectionInfo.participants, function (participantRef) {
+                                resolveCallArray.push(function (callbackParticipant) {
+                                    crudRepository.getEntity('Person', participantRef.participantUUID, callbackParticipant);
+                                })
+                            })
                         });
                     });
 
-                    callback(null, notificationRq);
+
+                    async.parallel(resolveCallArray, function (err, fetchedParticipants) {
+                        if (err) {
+                            return console.error('Error by fetching a person');
+                        }
+                        _.forEach(fetchedParticipants, function (personData) {
+                            if (personData) {
+                                notificationRq.participantsMap[personData.uuid] = new Person(personData);
+                            }
+                        });
+
+                        callback(null, notificationRq);
+                    })
+
+
                 },
                 // Start Notification Business to calculate and process notification logic
                 function (notificationRq, callback) {

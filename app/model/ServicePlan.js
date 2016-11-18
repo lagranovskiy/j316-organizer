@@ -88,7 +88,7 @@ var ServicePlan = function (servicePlanData) {
          * @returns {*}
          */
         get eventStartTime() {
-            return data.eventStartTime;
+            return data.eventStartTime || '10:00';
         },
 
         /**
@@ -96,7 +96,7 @@ var ServicePlan = function (servicePlanData) {
          * @returns {*}
          */
         get eventEndTime() {
-            return data.eventEndTime;
+            return data.eventEndTime || '12:00';
         },
 
 
@@ -104,7 +104,7 @@ var ServicePlan = function (servicePlanData) {
          * Returns plan setting according to email notifications
          */
         get notificationEmail() {
-            return data.notificationEmail;
+            return data.notificationEmail || false;
         },
 
 
@@ -112,14 +112,14 @@ var ServicePlan = function (servicePlanData) {
          * Returns plan setting according to sms notifications
          */
         get notificationSMS() {
-            return data.notificationSMS;
+            return data.notificationSMS || false;
         },
 
         /**
          * Returns plan setting according to calender notifications
          */
         get notificationCal() {
-            return data.notificationCal;
+            return data.notificationCal || false;
         },
 
         /**
@@ -127,7 +127,22 @@ var ServicePlan = function (servicePlanData) {
          * @returns {*}
          */
         get smsText() {
-            return data.smsText;
+            return data.smsText || '';
+        },
+
+        /*
+         * Getter for sms configured text
+         * @returns {*}
+         */
+        get emailText() {
+            return data.emailText || '';
+        },
+        /*
+         * Getter for sms configured text
+         * @returns {*}
+         */
+        get emailSubject() {
+            return data.emailSubject || '';
         },
 
 
