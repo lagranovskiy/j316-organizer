@@ -6,6 +6,7 @@ var async = require('neo-async');
 var crudRepository = new CrudRepository();
 
 var j316Adapter = require('../adapter/J316NotificatorAdapter');
+var notificationBusiness = require('../business/NotificationBusiness')();
 
 var ServicePlan = require('../model/ServicePlan');
 var Person = require('../model/Person');
@@ -33,9 +34,11 @@ var PlanNotificationController = function () {
 
             // Resolve Plan
             async.parallel([
+                // Fetch plan first
                 function (callback) {
                     crudRepository.getEntity('ServicePlan', planUUID, callback)
                 },
+                // Prepare request for the notification business
                 function (planData, callback) {
                     var servicePlan = new ServicePlan(planData);
                     var parsedGroupArray = JSON.parse(servicePlan.planJSON);
@@ -44,68 +47,50 @@ var PlanNotificationController = function () {
                         return callback('Cannot process plan. json parse error');
                     }
 
-                    var notificationData = {
-                        planUUID: servicePlan.uuid,
-                        planName: servicePlan.planName,
-                        eventDates: servicePlan.eventDates,
-                        groups: [],
-                        calender: {
-                            notificationCal: servicePlan.notificationCal,
-                            eventStartTime: servicePlan.eventStartTime,
-                            eventEndTime: servicePlan.eventEndTime
-                        },
-                        email: {
-                            notificationEmail: servicePlan.notificationEmail,
-                            smsText: servicePlan.smsText
-                        },
-                        sms: {
-                            notificationSMS: servicePlan.notificationSMS,
-                            smsText: servicePlan.smsText
-                        }
-
-
+                    var notificationRq = {
+                        servicePlan: servicePlan,
+                        servicePlanGroups: parsedGroupArray,
+                        participantsMap: {}
                     };
 
-                    _.forEach(parsedGroupInfo, function (groupInfo) {
 
-
+                    // Fetch persons that are participated to the plan according to the serialized info on service plan
+                    _.forEach(parsedGroupArray, function (groupInfo) {
                         _.forEach(groupInfo.sections, function (sectionInfo) {
-                            var calGroup = {
-                                groupName: groupInfo.name,
-                                location: groupInfo.address.location,
-                                besetzung: sectionInfo.besetzung,
-                                participants: []
-                            };
-
-
                             async.map(sectionInfo.participants, function (participantRef, callBack) {
-                                crudRepository.getEntity('Person', participantRef.participantUUID, callBack);
-                            }, function (err, results) {
-
-                                _.forEach(results, function (personData) {
-                                    calGroup.participants.push(new Person(personData));
+                                if (!notificationRq.participantsMap[participantRef.participantUUID]) {
+                                    crudRepository.getEntity('Person', participantRef.participantUUID, callBack);
+                                } else {
+                                    return callBack(null);
+                                }
+                            }, function (err, fetchedParticipants) {
+                                _.forEach(fetchedParticipants, function (personData) {
+                                    if (personData) {
+                                        notificationRq.participantsMap[personData.uuid] = new Person(personData);
+                                    }
                                 });
-
                             });
-
-
-                            notificationData.groups.push(calGroup);
-
                         });
-
                     });
 
-                    callback(null, notificationData);
+                    callback(null, notificationRq);
+                },
+                // Start Notification Business to calculate and process notification logic
+                function (notificationRq, callback) {
+
+                    var notificationPlanRequest = notificationBusiness.createPlanNotificationRequest(notificationRq);
+
+                    notificationBusiness.generatePlanNotifications(notificationPlanRequest, callback);
 
                 }
-            ], function (err, notificationData) {
+            ], function (err, notificationProcessResponse) {
                 if (err) {
                     return res.status(500).send('Problem by notification generation: ' + err);
                 }
 
-                return res.status(200).send(notificationData);
-                // Send notifications
+                console.info('Preparation for sending completed..  start sending');
 
+                return res.status(200).send(notificationProcessResponse);
             });
 
 
