@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var requestify = require('requestify');
+var config = require('../../config/config');
 
 /**
  * Controller to wrap notification persistence and logic
@@ -15,25 +16,12 @@ var J316NotificationAdapter = function () {
         /**
          * Returns active plan notifications
          *
+         * @param notification notification
          * @param callback callback
          * @return {*}
          */
-        scheduleNotification: function (callback) {
-            var notification = {
-                scheduledDate: '2016-07-29T13:00:00.000Z',
-                subject: 'Test',
-                message: 'Hello World',
-                recipient: {
-                    name: 'Leonid',
-                    email: 'test@agranovskiy.de',
-                    mobile: '017617870248'
-                },
-                notificationType: 'EMAIL',
-                referenceId: 'qweetrwefwf',
-                category: ['234234234234', 'Plan1234Q1']
-            };
-
-            requestify.post('https://j316-notificator.herokuapp.com/notification')
+        scheduleNotification: function (notification, callback) {
+            requestify.post(config.j316NotificatorURI + 'notification?apiToken=' + config.j316NotificatorAPIToken, notification)
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {
@@ -64,7 +52,7 @@ var J316NotificationAdapter = function () {
             } else if (referenceUUID) {
                 suffix += 'reference/' + referenceUUID;
             }
-            requestify.get('https://j316-notificator.herokuapp.com/notification' + suffix)
+            requestify.get(config.j316NotificatorURI + 'notification/' + suffix + '?apiToken=' + config.j316NotificatorAPIToken)
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {
@@ -95,7 +83,7 @@ var J316NotificationAdapter = function () {
                 isSent: true
             };
 
-            requestify.delete('https://j316-notificator.herokuapp.com/notification', removeRequest)
+            requestify.delete(config.j316NotificatorURI + 'notification?apiToken=' + config.j316NotificatorAPIToken, removeRequest)
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {

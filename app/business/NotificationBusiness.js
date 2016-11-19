@@ -215,8 +215,9 @@ var NotificationBusiness = function () {
                     if (planRequestData.email.notificationEmail) {
                         _.forEach(singleGroup.participants, function (participant) {
                             if (participant.notificationEmail && participant.email) {
+                                var notificationTermin = termin.add(-2, 'days');
                                 var notification = createNotificationElement(
-                                    termin,
+                                    notificationTermin,
                                     planRequestData.email.emailSubject,
                                     planRequestData.email.emailText,
                                     participant.forename + ' ' + participant.surname,
@@ -239,8 +240,9 @@ var NotificationBusiness = function () {
                     if (planRequestData.sms.notificationSMS) {
                         _.forEach(singleGroup.participants, function (participant) {
                             if (participant.notificationSMS && participant.mobilePhone) {
+                                var notificationTermin = termin.add(-2, 'days');
                                 var notification = createNotificationElement(
-                                    termin,
+                                    notificationTermin,
                                     null,
                                     planRequestData.sms.smsText,
                                     participant.forename + ' ' + participant.surname,
