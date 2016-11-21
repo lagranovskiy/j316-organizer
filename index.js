@@ -23,8 +23,6 @@ require('./app/routes.js')(router);
 app.use('/api', router);
 
 
-app.use(express.static(__dirname + '/public/dist/'));
-
 app.listen(config.httpPort, function () {
     console.log('Node app is running on port', config.httpPort);
 });

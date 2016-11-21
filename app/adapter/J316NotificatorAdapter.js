@@ -21,14 +21,26 @@ var J316NotificationAdapter = function () {
          * @return {*}
          */
         scheduleNotification: function (notification, callback) {
-            requestify.post(config.j316NotificatorURI + 'notification?apiToken=' + config.j316NotificatorAPIToken, notification)
+            requestify.post(config.j316NotificatorURI + 'notification?apiToken=' + config.j316NotificatorAPIToken, notification, {
+                cache: {cache: false}
+            })
+            // We dont send error to allow parall execution.
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {
-                        return callback(null, res);
+                        console.info('Notification created successfully');
+                        return callback(null, {success: true, result: res, request: notification});
                     } else {
-                        return callback('Error code: ' + response.body);
+                        return callback(null, {
+                            success: false,
+                            errorMessage: response.getCode(),
+                            request: notification
+                        });
                     }
+                })
+                .fail(function (response) {
+                    console.error('Cannot communicate with j316-notificator api: ' + JSON.stringify(response))
+                    return callback(null, {success: false, errorMessage: response.message, request: notification});
                 });
         },
 
@@ -46,7 +58,7 @@ var J316NotificationAdapter = function () {
                 return callback('Cannot query category and reference together. Please decide you for one of them');
             }
 
-            var suffix = '/';
+            var suffix = '';
             if (categoryUUID) {
                 suffix += 'category/' + categoryUUID;
             } else if (referenceUUID) {
@@ -60,6 +72,10 @@ var J316NotificationAdapter = function () {
                     } else {
                         return callback('Error code: ' + response.body);
                     }
+                })
+                .fail(function (response) {
+                    console.error('Cannot communicate with j316-notificator api: ' + JSON.stringify(response))
+                    return callback(null, {success: false, errorMessage: response.message});
                 });
         },
 
@@ -91,6 +107,10 @@ var J316NotificationAdapter = function () {
                     } else {
                         return callback('Error code: ' + response.body);
                     }
+                })
+                .fail(function (response) {
+                    console.error('Cannot communicate with j316-notificator api: ' + JSON.stringify(response))
+                    return callback(null, {success: false, errorMessage: response.message});
                 });
         }
 

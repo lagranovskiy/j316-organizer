@@ -2,7 +2,7 @@ var uuid = require('node-uuid');
 var relationMap = require('../../config/relationMap');
 var CrudRepository = require('../model/CrudRepository');
 var _ = require('underscore');
-var async = require('neo-async');
+var async = require('async');
 var crudRepository = new CrudRepository();
 
 var j316Adapter = require('../adapter/J316NotificatorAdapter')();
@@ -91,14 +91,14 @@ var PlanNotificationController = function () {
 
                 },
                 // send notificastion to the j316-notification module
-                function (notificationArray, callback) {
+                function (notificationArray, execCallback) {
                     var j316callArray = [];
                     _.each(notificationArray, function (notificationItem) {
                         j316callArray.push(function (callCallback) {
-                            j316Adapter.scheduleNotification(notificationItem, callCallback);
+                            return j316Adapter.scheduleNotification(notificationItem, callCallback);
                         })
                     });
-                    async.parallelLimit(j316callArray, 5, callback);
+                    async.parallelLimit(j316callArray, 5, execCallback);
                 }
             ], function (err, notificationProcessResponse) {
                 if (err) {

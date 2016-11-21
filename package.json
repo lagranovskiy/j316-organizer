@@ -12,6 +12,7 @@
     "dev": "nodemon index"
   },
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.14.1",
     "cookie-parser": "^1.4.0",
     "ejs": "2.3.3",
@@ -20,7 +21,7 @@
     "method-override": "^2.3.5",
     "moment": "^2.16.0",
     "morgan": "^1.6.1",
-    "neo-async": "^1.7.1",
+    "neo-async": "^2.0.1",
     "neo4j": "^1.1.1",
     "newrelic": "^1.24.0",
     "node-uuid": "^1.4.7",

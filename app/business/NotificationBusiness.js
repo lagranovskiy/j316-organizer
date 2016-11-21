@@ -82,6 +82,7 @@ var NotificationBusiness = function () {
      * @return {{scheduledDate: *, subject: *, message: *, recipient: {name: *, email: *, mobile: *}, notificationType: *, referenceId: *, category: *[]}}
      */
     function createNotificationElement(dueDate, subject, message, recipientName, recipientEmail, recipientMobile, eventLocation, eventStartTime, eventEndTime, notificationType, personUUID, planUUID, groupUUID) {
+        dueDate.set('hours',12);
         return {
             scheduledDate: moment(dueDate).toISOString(),
             subject: subject,
@@ -186,7 +187,10 @@ var NotificationBusiness = function () {
             _.forEach(planRequestData.groups, function (singleGroup) {
                 var notificationTerminArray = mapBesetzteTermine(planRequestData.eventDates, singleGroup.besetzung);
                 _.forEach(notificationTerminArray, function (termin) {
-
+                    var notificationTermin = termin.clone().add(-2, 'days');
+                    if (notificationTermin.isBefore(moment())) {
+                        return;
+                    }
 
                     if (planRequestData.calender.notificationCal) {
                         _.forEach(singleGroup.participants, function (participant) {
@@ -215,7 +219,7 @@ var NotificationBusiness = function () {
                     if (planRequestData.email.notificationEmail) {
                         _.forEach(singleGroup.participants, function (participant) {
                             if (participant.notificationEmail && participant.email) {
-                                var notificationTermin = termin.add(-2, 'days');
+                                var notificationTermin = termin.clone().add(-2, 'days');
                                 var notification = createNotificationElement(
                                     notificationTermin,
                                     planRequestData.email.emailSubject,
@@ -240,7 +244,7 @@ var NotificationBusiness = function () {
                     if (planRequestData.sms.notificationSMS) {
                         _.forEach(singleGroup.participants, function (participant) {
                             if (participant.notificationSMS && participant.mobilePhone) {
-                                var notificationTermin = termin.add(-2, 'days');
+                                var notificationTermin = termin.clone().add(-2, 'days');
                                 var notification = createNotificationElement(
                                     notificationTermin,
                                     null,
