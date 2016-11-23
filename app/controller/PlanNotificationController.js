@@ -106,8 +106,11 @@ var PlanNotificationController = function () {
                 }
 
                 console.info('Preparation for sending completed..  start sending');
-
-                return res.status(200).send(notificationProcessResponse);
+                var retVal = [];
+                _.each(notificationProcessResponse, function (resItem) {
+                    retVal.push(resItem)
+                });
+                return res.status(200).send(retVal);
             });
 
 

@@ -9,6 +9,30 @@ var moment = require('moment');
  */
 var NotificationBusiness = function () {
 
+
+    /**
+     * Resolves a startTime and returns moment for it
+     * @param dateMoment date moment
+     * @param timeDef time moment
+     */
+    var getParsedTimeMoment = function (dateMoment, timeDef) {
+        var retVal = dateMoment.clone();
+
+        if (timeDef.indexOf(":") == -1) {
+            console.error(timeDef + ' is not a valid time like 10:00');
+            return dateMoment;
+        }
+
+        var hoursParsed = timeDef.split(":")[0] * 1;
+        var minutesParsed = timeDef.split(":")[1] * 1;
+
+        retVal.set('hours', hoursParsed);
+        retVal.set('minutes', minutesParsed);
+        retVal.set('seconds', 0);
+
+        return retVal;
+    }
+
     /**
      * Generates array of event dates from start and endDates
      * @param startDate start of the plan (incl)
@@ -82,7 +106,7 @@ var NotificationBusiness = function () {
      * @return {{scheduledDate: *, subject: *, message: *, recipient: {name: *, email: *, mobile: *}, notificationType: *, referenceId: *, category: *[]}}
      */
     function createNotificationElement(dueDate, subject, message, recipientName, recipientEmail, recipientMobile, eventLocation, eventStartTime, eventEndTime, notificationType, personUUID, planUUID, groupUUID) {
-        dueDate.set('hours',12);
+
         return {
             scheduledDate: moment(dueDate).toISOString(),
             subject: subject,
@@ -94,8 +118,8 @@ var NotificationBusiness = function () {
             },
             eventData: {
                 location: eventLocation,
-                startTime: eventStartTime,
-                endTime: eventEndTime
+                eventStart: eventStartTime,
+                eventEnd: eventEndTime
             },
             notificationType: notificationType,
             referenceId: personUUID,
@@ -195,16 +219,20 @@ var NotificationBusiness = function () {
                     if (planRequestData.calender.notificationCal) {
                         _.forEach(singleGroup.participants, function (participant) {
                             if (participant.notificationCal && participant.email) {
+
+                                var eventStartTime = getParsedTimeMoment(termin, planRequestData.calender.eventStartTime);
+                                var eventEndTime = getParsedTimeMoment(termin, planRequestData.calender.eventEndTime);
+
                                 var notification = createNotificationElement(
-                                    termin,
+                                    moment().add(1, 'hours'), // Cal events schould be sent immediately
                                     planRequestData.planName,
                                     singleGroup.groupName, // Currently by event is group name the description-summary
                                     participant.forename + ' ' + participant.surname,
                                     participant.email,
                                     null,
                                     singleGroup.location,
-                                    planRequestData.calender.eventStartTime,
-                                    planRequestData.calender.eventEndTime,
+                                    eventStartTime,
+                                    eventEndTime,
                                     'cal',
                                     participant.uuid,
                                     planRequestData.planUUID,
