@@ -105,7 +105,7 @@ var NotificationBusiness = function () {
      * @param groupUUID uuid of a group -> category
      * @return {{scheduledDate: *, subject: *, message: *, recipient: {name: *, email: *, mobile: *}, notificationType: *, referenceId: *, category: *[]}}
      */
-    function createNotificationElement(dueDate, subject, message, recipientName, recipientEmail, recipientMobile, eventLocation, eventStartTime, eventEndTime, notificationType, personUUID, planUUID, groupUUID) {
+    function createNotificationElement(dueDate, subject, message, recipientName, recipientEmail, recipientMobile, eventLocation, eventStartTime, eventEndTime, notificationType, personUUID, planUUID, groupUUID, sectionUUID) {
 
         return {
             scheduledDate: moment(dueDate).toISOString(),
@@ -123,7 +123,7 @@ var NotificationBusiness = function () {
             },
             notificationType: notificationType,
             referenceId: personUUID,
-            category: [planUUID, groupUUID]
+            category: [planUUID, groupUUID, sectionUUID]
         };
     };
 
@@ -169,7 +169,8 @@ var NotificationBusiness = function () {
             _.forEach(requestData.servicePlanGroups, function (groupInfo) {
                 _.forEach(groupInfo.sections, function (sectionInfo) {
                     var calGroup = {
-                        groupUUID: sectionInfo.uuid,
+                        groupUUID: groupInfo.uuid,
+                        sectionUUID: sectionInfo.uuid,
                         groupName: groupInfo.name,
                         location: groupInfo.address.location,
                         besetzung: sectionInfo.besetzung,
@@ -236,7 +237,8 @@ var NotificationBusiness = function () {
                                     'cal',
                                     participant.uuid,
                                     planRequestData.planUUID,
-                                    singleGroup.groupUUID);
+                                    singleGroup.groupUUID,
+                                    singleGroup.sectionUUID);
 
                                 // TODO: Change that multiple event participants become guest of the same event and not n:n
                                 notificationsArray.push(notification);
@@ -261,7 +263,8 @@ var NotificationBusiness = function () {
                                     'email',
                                     participant.uuid,
                                     planRequestData.planUUID,
-                                    singleGroup.groupUUID);
+                                    singleGroup.groupUUID,
+                                    singleGroup.sectionUUID);
 
                                 // TODO: Change that multiple event participants become guest of the same event and not n:n
                                 notificationsArray.push(notification);
@@ -286,7 +289,8 @@ var NotificationBusiness = function () {
                                     'sms',
                                     participant.uuid,
                                     planRequestData.planUUID,
-                                    singleGroup.groupUUID);
+                                    singleGroup.groupUUID,
+                                    singleGroup.sectionUUID);
 
                                 notificationsArray.push(notification);
                             }
