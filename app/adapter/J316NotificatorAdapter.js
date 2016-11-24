@@ -22,14 +22,14 @@ var J316NotificationAdapter = function () {
          */
         scheduleNotification: function (notification, callback) {
             requestify.post(config.j316NotificatorURI + 'notification?apiToken=' + config.j316NotificatorAPIToken, notification, {
-                cache: {cache: false}
+                cache: { cache: false }
             })
-            // We dont send error to allow parall execution.
+                // We dont send error to allow parall execution.
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {
                         console.info('Notification created successfully');
-                        return callback(null, {success: true, result: res, request: notification});
+                        return callback(null, { success: true, result: res, request: notification });
                     } else {
                         return callback(null, {
                             success: false,
@@ -40,7 +40,7 @@ var J316NotificationAdapter = function () {
                 })
                 .fail(function (response) {
                     console.error('Cannot communicate with j316-notificator api: ' + JSON.stringify(response))
-                    return callback(null, {success: false, errorMessage: response.message, request: notification});
+                    return callback(null, { success: false, errorMessage: response.message, request: notification });
                 });
         },
 
@@ -75,7 +75,7 @@ var J316NotificationAdapter = function () {
                 })
                 .fail(function (response) {
                     console.error('Cannot communicate with j316-notificator api: ' + JSON.stringify(response))
-                    return callback(null, {success: false, errorMessage: response.message});
+                    return callback(null, { success: false, errorMessage: response.message });
                 });
         },
 
@@ -89,17 +89,21 @@ var J316NotificationAdapter = function () {
          * @return {*}
          */
         removePlanNotifications: function (categoryUUID, referenceUUID, callback) {
-            if (categoryUUID && referenceUUID) {
-                return callback('Cannot query category and reference together. Please decide you for one of them');
+
+            var suffix = '';
+            if (referenceUUID) {
+                suffix += '/reference/' + referenceUUID;
+            } 
+            if (categoryUUID) {
+                suffix += '/category/' + categoryUUID;
             }
 
             var removeRequest = {
                 category: categoryUUID,
-                referenceId: referenceUUID,
-                isSent: true
+                referenceId: referenceUUID
             };
 
-            requestify.delete(config.j316NotificatorURI + 'notification?apiToken=' + config.j316NotificatorAPIToken, removeRequest)
+            requestify.delete(config.j316NotificatorURI + 'notification' + suffix + '?apiToken=' + config.j316NotificatorAPIToken, removeRequest)
                 .then(function (response) {
                     var res = response.getBody();
                     if (response.getCode() == 200) {
@@ -110,7 +114,7 @@ var J316NotificationAdapter = function () {
                 })
                 .fail(function (response) {
                     console.error('Cannot communicate with j316-notificator api: ' + JSON.stringify(response))
-                    return callback(null, {success: false, errorMessage: response.message});
+                    return callback(null, { success: false, errorMessage: response.message });
                 });
         }
 
