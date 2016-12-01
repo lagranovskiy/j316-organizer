@@ -35,18 +35,18 @@ var CrudControllerFactory = {
                 var entityUUID = req.params.entityUUID;
 
                 if (!entityUUID) {
-                    return next('Error by getting entity of type ' + entityType + '. uuid is empty or not set.');
+                    return res.status(500).send('Error by getting entity of type ' + entityType + '. uuid is empty or not set.');
                 }
 
                 console.info('Getting ' + entityType + ' with uuid: ' + entityUUID);
 
                 crudRepository.getEntity(entityType, entityUUID, function (err, data) {
                     if (err) {
-                        return next(err);
+                        return res.status(500).send(err);
                     }
 
                     if (!data) {
-                        return next('Cannot find ' + entityType + ' for the uuid + ' + uuid);
+                        return res.status(500).send('Cannot find ' + entityType + ' for the uuid + ' + uuid);
                     }
 
                     var entityWrapperInstance = new EntityWrapper(data);
@@ -67,7 +67,7 @@ var CrudControllerFactory = {
 
                 crudRepository.listEntity(entityType, function (err, entityRsArray) {
                     if (err) {
-                        return next(err);
+                        return res.status(500).send(err);
                     }
                     console.info('Getting all ' + entityType + '.');
 
@@ -92,7 +92,7 @@ var CrudControllerFactory = {
                 var entityData = req.body;
 
                 if (!entityData) {
-                    return next('Error. No ' + entityType + ' data is empty');
+                    return res.status(500).send('Error. No ' + entityType + ' data is empty');
                 }
 
 
@@ -108,13 +108,13 @@ var CrudControllerFactory = {
 
                 var handleValidatedEntity = function (err, validatedEntityWrapper) {
                     if (err) {
-                        return next(err);
+                        return res.status(500).send(err);
                     }
                     console.info(entityType + ' with uuid: ' + validatedEntityWrapper.uuid + ' is validated successfully. Continue with saving.');
 
                     crudRepository.saveEntity(entityType, validatedEntityWrapper, function (err, data) {
                         if (err) {
-                            return next(err);
+                            return res.status(500).send(err);
                         }
 
                         var savedEntityWrapper = new EntityWrapper(data);
@@ -144,14 +144,14 @@ var CrudControllerFactory = {
                 var entityUUID = req.params.entityUUID;
 
                 if (!entityUUID) {
-                    return next('Error by deleting entity of type ' + entityType + '. uuid is empty or not set.');
+                    return res.status(500).send('Error by deleting entity of type ' + entityType + '. uuid is empty or not set.');
                 }
 
                 console.info('Deleting ' + entityType + ' with uuid: ' + entityUUID);
 
                 crudRepository.deleteEntity(entityType, entityUUID, function (err, result) {
                     if (err) {
-                        return next(err);
+                        return res.status(500).send(err);
                     }
 
                     return res.send(result);

@@ -70,7 +70,7 @@ var CrudRelationControllerFactory = {
                 ], function(err, retVal) {
                     if (err) {
                         console.error('Cannot resolve ' + relation.getMetaInfo().relationType + '. ' + err);
-                        return next(err);
+                        return res.status(500).send(err);
                     }
                     console.info('Request of ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ' + retVal.length + ' relations found');
                     return res.send(retVal);
@@ -89,15 +89,15 @@ var CrudRelationControllerFactory = {
                 var relationSourceUUID = req.params.sourceUUID;
 
                 if (!relationSourceUUID) {
-                    return next('Error. UUID of relation source is empty');
+                    return res.status(500).send('Error. UUID of relation source is empty');
                 }
 
                 var relationWrapperData = req.body;
                 if (!relationWrapperData) {
-                    return next('Error. No ' + relationType + '. data is empty');
+                    return res.status(500).send('Error. No ' + relationType + '. data is empty');
                 }
                 if (!relationWrapperData.ref) {
-                    return next('Error. No ' + relationType + ' target set. Cannot save/create relation.');
+                    return res.status(500).send('Error. No ' + relationType + ' target set. Cannot save/create relation.');
                 }
                 console.info('Saving ' + relationType + ' with source uuid: ' + relationSourceUUID);
 
@@ -137,7 +137,7 @@ var CrudRelationControllerFactory = {
                 ], function(err, retVal) {
                     if (err) {
                         console.error('Cannot save ' + relation.getMetaInfo().relationType + '. ' + err);
-                        return next(err);
+                        return res.status(500).send(err);
                     }
                     console.info('Request for saving of ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ');
                     return res.send(retVal);
@@ -158,11 +158,11 @@ var CrudRelationControllerFactory = {
                 var relationUUID = req.params.relationUUID;
 
                 if (!relationSourceUUID) {
-                    return next('Error. UUID of relation source is empty');
+                    return res.status(500).send('Error. UUID of relation source is empty');
                 }
 
                 if (!relationUUID) {
-                    return next('Error. UUID of relation is empty');
+                    return res.status(500).send('Error. UUID of relation is empty');
                 }
 
                 console.info('Deleting ' + relationType + ' with uuid: ' + relationUUID);
@@ -193,7 +193,7 @@ var CrudRelationControllerFactory = {
                 ], function(err, retVal) {
                     if (err) {
                         console.error('Cannot delete relation ' + relation.getMetaInfo().relationType + '. ' + err);
-                        return next(err);
+                        return res.status(500).send(err);
                     }
                     console.info('Request for delete of relation ' + relation.getMetaInfo().relationType + ' for ' + relation.getMetaInfo().sourceType + ' ' + relationSourceUUID + ' successful. ' + retVal.length + ' relations deleted');
                     return res.send(retVal);
