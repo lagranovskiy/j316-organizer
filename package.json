@@ -17,6 +17,7 @@
     "cookie-parser": "^1.4.0",
     "ejs": "2.3.3",
     "express": "4.13.3",
+    "express-jwt": "^5.1.0",
     "html": "0.0.10",
     "method-override": "^2.3.5",
     "moment": "^2.16.0",

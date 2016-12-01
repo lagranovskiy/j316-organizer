@@ -28,10 +28,17 @@ var organizationProvidesServiceRelationController = crudRelationControllerFactor
 
 var postalAddressController = crudControllerFactory.getCRUD('PostalAddress');
 
+var jwt = require('express-jwt');
+
 var config = require('../config/config');
 
 module.exports = function (router) {
 
+
+    var jwtCheck = jwt({
+        secret: new Buffer('GmDvCBT5mjIIufCBPJd1B1MadWLUJGeR_lqL0bTBMIOlaL8uMTOVzILg7osm1tW-', 'base64'),
+        audience: 'J2NTOuFFPfJTzMsbgspctEgdbZ0YGWYx'
+    });
 
     var errorHandler = function (err, req, res, next) {
         console.error(err.stack);
@@ -55,135 +62,115 @@ module.exports = function (router) {
      * Operations of Service Plans
      */
 
-    router.get('/serviceplan', servicePlanController.listEntity);
-    router.get('/serviceplan/:entityUUID', servicePlanController.getEntity);
+    router.get('/serviceplan', jwtCheck, servicePlanController.listEntity);
+    router.get('/serviceplan/:entityUUID',jwtCheck, servicePlanController.getEntity);
 
-    router.post('/serviceplan', servicePlanController.saveEntity);
-    router.put('/serviceplan', servicePlanController.saveEntity);
-    router.delete('/serviceplan/:entityUUID', servicePlanController.deleteEntity);
+    router.post('/serviceplan',jwtCheck, servicePlanController.saveEntity);
+    router.put('/serviceplan',jwtCheck, servicePlanController.saveEntity);
+    router.delete('/serviceplan/:entityUUID',jwtCheck, servicePlanController.deleteEntity);
 
     /**
      *  Operations on notifications
      */
-    router.post('/serviceplan/:planUUID/notifications/start', planNotificationController.generatePlanNotifications);
-    router.get('/serviceplan/:planUUID/notifications', planNotificationController.getPlanNotifications);
-    router.get('/person/:personUUID/notifications', planNotificationController.getPersonNotifications);
-    router.delete('/serviceplan/:planUUID/notifications', planNotificationController.cancelPersonPlanNotifications);
-    router.delete('/serviceplan/:planUUID/person/:personUUID/notifications', planNotificationController.cancelPersonPlanNotifications);
-    router.delete('/person/:personUUID/notifications', planNotificationController.cancelPersonPlanNotifications);
+    router.post('/serviceplan/:planUUID/notifications/start',jwtCheck, planNotificationController.generatePlanNotifications);
+    router.get('/serviceplan/:planUUID/notifications',jwtCheck, planNotificationController.getPlanNotifications);
+    router.get('/person/:personUUID/notifications', jwtCheck,planNotificationController.getPersonNotifications);
+    router.delete('/serviceplan/:planUUID/notifications',jwtCheck, planNotificationController.cancelPersonPlanNotifications);
+    router.delete('/serviceplan/:planUUID/person/:personUUID/notifications',jwtCheck, planNotificationController.cancelPersonPlanNotifications);
+    router.delete('/person/:personUUID/notifications',jwtCheck, planNotificationController.cancelPersonPlanNotifications);
 
     /**
      * Operations for person lists
      */
-    router.get('/person', personController.listEntity);
+    router.get('/person',jwtCheck, personController.listEntity);
     /**
      * Operations for a single person
      */
-    router.get('/person/:entityUUID', personController.getEntity);
-    router.post('/person', personController.saveEntity);
-    router.put('/person', personController.saveEntity);
-    router.delete('/person/:entityUUID', personController.deleteEntity);
+    router.get('/person/:entityUUID',jwtCheck, personController.getEntity);
+    router.post('/person',jwtCheck, personController.saveEntity);
+    router.put('/person',jwtCheck, personController.saveEntity);
+    router.delete('/person/:entityUUID',jwtCheck, personController.deleteEntity);
 
     /**
      * Person Relation Services
      */
 
-    router.get('/person/:sourceUUID/child', personHasChildRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/child', personHasChildRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/child/:relationUUID', personHasChildRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/child',jwtCheck, personHasChildRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/child', jwtCheck,personHasChildRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/child/:relationUUID',jwtCheck, personHasChildRelationController.deleteRelation);
 
 
-    router.get('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/address', personIsHousekeeperOfPostalAddressRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/address/:relationUUID', personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/address',jwtCheck, personIsHousekeeperOfPostalAddressRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/address',jwtCheck, personIsHousekeeperOfPostalAddressRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/address/:relationUUID',jwtCheck, personIsHousekeeperOfPostalAddressRelationController.deleteRelation);
 
-    router.get('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/marriage', personIsMarriedWithRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/marriage/:relationUUID', personIsMarriedWithRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/marriage',jwtCheck, personIsMarriedWithRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/marriage',jwtCheck, personIsMarriedWithRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/marriage/:relationUUID',jwtCheck, personIsMarriedWithRelationController.deleteRelation);
 
-    router.get('/person/:sourceUUID/relation', personIsRelatedToRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/relation', personIsRelatedToRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/relation/:relationUUID', personIsRelatedToRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/relation',jwtCheck, personIsRelatedToRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/relation',jwtCheck, personIsRelatedToRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/relation/:relationUUID',jwtCheck, personIsRelatedToRelationController.deleteRelation);
 
-    router.get('/person/:sourceUUID/parent', personHasParentRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/parent', personHasParentRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/parent/:relationUUID', personHasParentRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/parent',jwtCheck, personHasParentRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/parent',jwtCheck, personHasParentRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/parent/:relationUUID',jwtCheck, personHasParentRelationController.deleteRelation);
 
-    router.get('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/engagement', personParticipateInServiceRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/engagement/:relationUUID', personParticipateInServiceRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/engagement',jwtCheck, personParticipateInServiceRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/engagement',jwtCheck, personParticipateInServiceRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/engagement/:relationUUID',jwtCheck, personParticipateInServiceRelationController.deleteRelation);
 
-    router.get('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/responsibility', personIsResponsibleForServiceRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/responsibility/:relationUUID', personIsResponsibleForServiceRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/responsibility',jwtCheck, personIsResponsibleForServiceRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/responsibility',jwtCheck, personIsResponsibleForServiceRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/responsibility/:relationUUID',jwtCheck, personIsResponsibleForServiceRelationController.deleteRelation);
 
-    router.get('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.getRelatedRelations);
-    router.put('/person/:sourceUUID/membership', personIsMemberOfOrganizationRelationController.saveRelation);
-    router.delete('/person/:sourceUUID/membership/:relationUUID', personIsMemberOfOrganizationRelationController.deleteRelation);
+    router.get('/person/:sourceUUID/membership',jwtCheck, personIsMemberOfOrganizationRelationController.getRelatedRelations);
+    router.put('/person/:sourceUUID/membership',jwtCheck, personIsMemberOfOrganizationRelationController.saveRelation);
+    router.delete('/person/:sourceUUID/membership/:relationUUID',jwtCheck, personIsMemberOfOrganizationRelationController.deleteRelation);
 
     /**
      * Operations for a single Postal Address
      */
-    router.get('/postal', postalAddressController.listEntity);
-    router.get('/postal/:entityUUID', postalAddressController.getEntity);
-    router.put('/postal', postalAddressController.saveEntity);
-    router.delete('/postal/:entityUUID', postalAddressController.deleteEntity);
+    router.get('/postal',jwtCheck, postalAddressController.listEntity);
+    router.get('/postal/:entityUUID',jwtCheck, postalAddressController.getEntity);
+    router.put('/postal',jwtCheck, postalAddressController.saveEntity);
+    router.delete('/postal/:entityUUID',jwtCheck, postalAddressController.deleteEntity);
 
     /**
      * Operations for a single Service
      */
-    router.get('/service', serviceController.listEntity);
-    router.get('/service/:entityUUID', serviceController.getEntity);
-    router.put('/service', serviceController.saveEntity);
-    router.delete('/service/:entityUUID', serviceController.deleteEntity);
+    router.get('/service',jwtCheck, serviceController.listEntity);
+    router.get('/service/:entityUUID',jwtCheck, serviceController.getEntity);
+    router.put('/service',jwtCheck, serviceController.saveEntity);
+    router.delete('/service/:entityUUID',jwtCheck, serviceController.deleteEntity);
 
-    router.get('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.getRelatedRelations);
-    router.put('/service/:sourceUUID/participant', serviceParticipatedPersonRelationController.saveRelation);
-    router.delete('/service/:sourceUUID/participant/:relationUUID', serviceParticipatedPersonRelationController.deleteRelation);
+    router.get('/service/:sourceUUID/participant',jwtCheck, serviceParticipatedPersonRelationController.getRelatedRelations);
+    router.put('/service/:sourceUUID/participant',jwtCheck, serviceParticipatedPersonRelationController.saveRelation);
+    router.delete('/service/:sourceUUID/participant/:relationUUID',jwtCheck, serviceParticipatedPersonRelationController.deleteRelation);
 
     /**
      * Operations for a single Organization
      */
-    router.get('/organization', organizationController.listEntity);
-    router.get('/organization/:entityUUID', organizationController.getEntity);
-    router.put('/organization', organizationController.saveEntity);
-    router.delete('/organization/:entityUUID', organizationController.deleteEntity);
+    router.get('/organization',jwtCheck, organizationController.listEntity);
+    router.get('/organization/:entityUUID',jwtCheck, organizationController.getEntity);
+    router.put('/organization',jwtCheck, organizationController.saveEntity);
+    router.delete('/organization/:entityUUID',jwtCheck, organizationController.deleteEntity);
 
-    router.get('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.getRelatedRelations);
-    router.put('/organization/:sourceUUID/activemember', organizationActiveMemberRelationController.saveRelation);
-    router.delete('/organization/:sourceUUID/activemember/:relationUUID', organizationActiveMemberRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/activemember',jwtCheck, organizationActiveMemberRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/activemember',jwtCheck, organizationActiveMemberRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/activemember/:relationUUID',jwtCheck, organizationActiveMemberRelationController.deleteRelation);
 
-    router.get('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.getRelatedRelations);
-    router.put('/organization/:sourceUUID/inactivemember', organizationInactiveMemberRelationController.saveRelation);
-    router.delete('/organization/:sourceUUID/inactivemember/:relationUUID', organizationInactiveMemberRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/inactivemember',jwtCheck, organizationInactiveMemberRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/inactivemember',jwtCheck, organizationInactiveMemberRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/inactivemember/:relationUUID',jwtCheck, organizationInactiveMemberRelationController.deleteRelation);
 
-    router.get('/organization/:sourceUUID/location', organizationHasLocationRelationController.getRelatedRelations);
-    router.put('/organization/:sourceUUID/location', organizationHasLocationRelationController.saveRelation);
-    router.delete('/organization/:sourceUUID/location/:relationUUID', organizationHasLocationRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/location',jwtCheck, organizationHasLocationRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/location',jwtCheck, organizationHasLocationRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/location/:relationUUID',jwtCheck, organizationHasLocationRelationController.deleteRelation);
 
-    router.get('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.getRelatedRelations);
-    router.put('/organization/:sourceUUID/service', organizationProvidesServiceRelationController.saveRelation);
-    router.delete('/organization/:sourceUUID/service/:relationUUID', organizationProvidesServiceRelationController.deleteRelation);
+    router.get('/organization/:sourceUUID/service',jwtCheck, organizationProvidesServiceRelationController.getRelatedRelations);
+    router.put('/organization/:sourceUUID/service',jwtCheck, organizationProvidesServiceRelationController.saveRelation);
+    router.delete('/organization/:sourceUUID/service/:relationUUID',jwtCheck, organizationProvidesServiceRelationController.deleteRelation);
 
-    /**
-     * Test if the caller gave the apiToken in the apiToken query param.
-     *
-     * @param req
-     * @param res
-     * @param next
-     */
-    function authorize(req, res, next) {
-
-        if (!req.query.apiToken) {
-            res.sendStatus(401);
-            return next('No API_TOKEN sent. Cannot process');
-        }
-        if (req.query.apiToken !== config.apiToken) {
-            res.sendStatus(401);
-            return next('Token API_TOKEN is invalid. Cannot process');
-        }
-
-        next();
-    }
 
 };
