@@ -12,9 +12,6 @@ function validatePerson(person, callback) {
         retVal.push('Person must have a surname');
     }
 
-    if (!person.gender) {
-        retVal.push('Person must have a gender');
-    }
     if (retVal.length > 0) {
         return callback(retVal);
     } else {

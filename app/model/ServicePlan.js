@@ -5,6 +5,7 @@ var util = require('util'),
 
 function validateServicePlan(servicePlan, callback) {
     var retVal = [];
+
     if (!servicePlan.planName) {
         retVal.push('Service Plan must have a name');
     }
@@ -143,6 +144,10 @@ var ServicePlan = function (servicePlanData) {
          */
         get emailSubject() {
             return data.emailSubject || '';
+        },
+
+        get calEventName() {
+            return data.calEventName || '';
         },
 
 
