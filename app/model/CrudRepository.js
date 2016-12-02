@@ -21,7 +21,7 @@ CrudRepository.prototype.getEntity = function (entityType, uuid, retValCallback)
     console.info('Repository: Resolving ' + entityType + ' with uuid ' + uuid);
     var query = [
         'MATCH (entity:' + entityType + '{uuid: {uuid}})',
-        'WHERE entity.isDeleted = false OR entity.isDeleted IS NULL',
+        //'WHERE entity.isDeleted = false OR entity.isDeleted IS NULL',
         'RETURN entity'
     ].join('\n');
 
@@ -34,8 +34,6 @@ CrudRepository.prototype.getEntity = function (entityType, uuid, retValCallback)
             db.query(query, params, callback);
         },
         function (results, callback) {
-
-
             if (!results || results.length != 1) {
                 return callback('Cannot resolve ' + entityType + ' by uuid: ' + uuid + '.');
             }

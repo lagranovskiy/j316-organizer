@@ -69,10 +69,10 @@ var PlanNotificationController = function () {
 
                     async.parallel(resolveCallArray, function (err, fetchedParticipants) {
                         if (err) {
-                            return console.error('Error by fetching a person');
+                            return console.error('Error by fetching a person :: ' + err);
                         }
                         _.forEach(fetchedParticipants, function (personData) {
-                            if (personData) {
+                            if (personData && !personData.deleted) {
                                 notificationRq.participantsMap[personData.uuid] = new Person(personData);
                             }
                         });
