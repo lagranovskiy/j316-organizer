@@ -36,8 +36,8 @@ module.exports = function (router) {
 
 
     var jwtCheck = jwt({
-        secret: new Buffer('GmDvCBT5mjIIufCBPJd1B1MadWLUJGeR_lqL0bTBMIOlaL8uMTOVzILg7osm1tW-', 'base64'),
-        audience: 'J2NTOuFFPfJTzMsbgspctEgdbZ0YGWYx'
+        secret: new Buffer(config.auth0secret, 'base64'),
+        audience: config.auth0audience
     });
 
     var errorHandler = function (err, req, res, next) {
