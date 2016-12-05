@@ -24,7 +24,7 @@ app.use('/', router);
 
 
 app.listen(config.httpPort, function () {
-    console.log('Node app is running on port', config.httpPort);
+    console.log('J316 organizer backend app is running on port', config.httpPort);
 });
 
 
