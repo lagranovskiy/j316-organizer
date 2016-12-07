@@ -20,7 +20,7 @@ app.use(cookieParser('')); // read cookies (needed for auth)
 
 // Initialize routes
 require('./app/routes.js')(router);
-app.use('/', router);
+app.use('/api', router);
 
 
 app.listen(config.httpPort, function () {
