@@ -6,13 +6,7 @@ var util = require('util'),
 function validatePostalAddress(postal, callback) {
     var retVal = [];
    
-    if (!postal.city) {
-        retVal.push('PostalAddress must have a city');
-    }
 
-    if (!postal.country) {
-        retVal.push('PostalAddress must have a country');
-    }
     if (retVal.length > 0) {
         return callback(retVal);
     } else {
