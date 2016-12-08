@@ -224,8 +224,11 @@ var NotificationBusiness = function () {
                                 var eventStartTime = getParsedTimeMoment(termin, planRequestData.calender.eventStartTime);
                                 var eventEndTime = getParsedTimeMoment(termin, planRequestData.calender.eventEndTime);
 
+                                // Prevent google to get in panic by so many events at very short time
+                                var randomDelay = this.randomIntInc(1, 72);
+
                                 var notification = createNotificationElement(
-                                    moment().add(1, 'hours'), // Cal events schould be sent immediately
+                                    moment().add(randomDelay, 'hours'), // Cal events schould be sent immediately
                                     planRequestData.planName,
                                     singleGroup.groupName, // Currently by event is group name the description-summary
                                     participant.forename + ' ' + participant.surname,
@@ -300,6 +303,10 @@ var NotificationBusiness = function () {
             });
 
             return callback(null, notificationsArray);
+        },
+
+        randomIntInc: function (low, high) {
+            return Math.floor(Math.random() * (high - low + 1) + low);
         }
 
 
