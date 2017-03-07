@@ -102,6 +102,13 @@ var ServicePlan = function (servicePlanData) {
 
 
         /**
+         * Retuns the flag if the plan is active
+         * @return {*|boolean}
+         */
+        get planActive() {
+            return data.planActive || false
+        },
+        /**
          * Returns plan setting according to email notifications
          */
         get notificationEmail() {
